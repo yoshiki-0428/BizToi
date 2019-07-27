@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/ProteinCounter
+    username: root
+    driverClassName: com.mysql.cj.jdbc.Driver
+
+cloud:
+  aws:
+    stack:
+      # CloudFormationのstack名を自動収集しない
+      auto: false
+    region:
+      # EC2のmetadataを自動収集しない
+      auto: false
+      static: ap-northeast-1
