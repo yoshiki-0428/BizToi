@@ -1,4 +1,4 @@
-package com.yoshikiohashi.ProteinCounter
+package com.yoshikiohashi.protein_counter
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
