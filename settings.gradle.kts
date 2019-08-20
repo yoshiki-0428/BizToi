@@ -11,4 +11,4 @@ pluginManagement {
 		}
 	}
 }
-rootProject.name = "ProteinCounter"
+rootProject.name = "BizToi"

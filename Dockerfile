@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11
+FROM adoptopenjdk/openjdk8
 RUN mkdir /work
 COPY . /work
 WORKDIR /work

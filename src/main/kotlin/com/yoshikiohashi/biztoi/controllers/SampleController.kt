@@ -1,4 +1,4 @@
-package com.yoshikiohashi.protein_counter.controllers
+package com.yoshikiohashi.biztoi.controllers
 
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -8,6 +8,6 @@ class SampleController {
 
     @RequestMapping("/sample")
     fun index(): String {
-        return "hello World"
+        return "hello World !!"
     }
 }
