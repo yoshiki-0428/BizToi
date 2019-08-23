@@ -21,17 +21,17 @@ export default {
     };
   },
   created() {
-    const _this = this
+    const _this = this;
     axios
-      .get("http://localhost:8000/api/auth/token", {
+      .get(process.env.VUE_APP_API_BASE_URL + "/auth/token", {
         params: {
           code: this.$route.query.code
         }
       })
       .then(result => {
-        _this.tokenId = result.data.id_token
-        _this.accessToken = result.data.access_token
-        _this.refreshToken = result.data.refresh_token
+        _this.tokenId = result.data.id_token;
+        _this.accessToken = result.data.access_token;
+        _this.refreshToken = result.data.refresh_token;
       });
   }
 };

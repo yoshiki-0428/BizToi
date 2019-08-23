@@ -1,13 +1,20 @@
 <template>
-  <HelloWorld />
+  <v-container>
+    <v-layout text-center wrap>
+      <logo />
+      <login-button />
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
-import HelloWorld from "../components/HelloWorld";
+import Logo from "../components/Logo";
+import LoginButton from "../components/LoginButton"
 
 export default {
   components: {
-    HelloWorld
+    Logo,
+    LoginButton
   }
 };
 </script>
