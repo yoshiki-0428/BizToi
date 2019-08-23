@@ -37,7 +37,10 @@ extra["springCloudVersion"] = "Hoxton.M1"
 dependencies {
 	compile("io.springfox:springfox-swagger2:2.9.2")
 	compile( "io.springfox:springfox-swagger-ui:2.9.2")
+	compile("com.nimbusds:nimbus-jose-jwt:5.12")
+	compile("com.amazonaws:aws-java-sdk-cognitoidp")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	runtimeOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("org.flywaydb:flyway-core")
