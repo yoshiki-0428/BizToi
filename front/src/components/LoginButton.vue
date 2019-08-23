@@ -2,17 +2,9 @@
   <v-container>
     <v-layout text-center wrap>
       <v-flex xs12>
-        <v-img
-          :src="require('../assets/logo.png')"
-          class="my-3"
-          contain
-          height="200"
-        ></v-img>
-      </v-flex>
-      <v-flex xs12>
         <v-btn
           color="red"
-          href="http://localhost:8000/api/auth/login"
+          :href="url"
           target="_self"
           dark
           >新規登録 / ログインはこちらから
@@ -21,3 +13,13 @@
     </v-layout>
   </v-container>
 </template>
+
+<script>
+export default {
+  data: () => {
+    return {
+      url: process.env.VUE_APP_API_BASE_URL + "auth/login"
+    };
+  }
+};
+</script>
