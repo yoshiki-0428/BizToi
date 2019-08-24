@@ -23,7 +23,7 @@ export default {
   created() {
     const _this = this;
     axios
-      .get(process.env.VUE_APP_API_BASE_URL + "/auth/token", {
+      .get(process.env.VUE_APP_API_BASE_URL + "auth/token", {
         params: {
           code: this.$route.query.code
         }
