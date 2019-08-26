@@ -1,8 +1,6 @@
-FROM adoptopenjdk/openjdk8
+FROM openjdk:8-jdk-alpine
 WORKDIR /usr/src/app
 COPY . /usr/src/app
-#RUN mv /work/build/libs/*.jar /work/app.jar
-#CMD /work/gradlew bootRun --stacktrace
-EXPOSE 8000
-CMD ["./gradlew", "bootRun"]
-#ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/work/app.jar"]
+RUN /usr/src/app/gradlew build
+RUN mv /usr/src/app/build/libs/*.jar /usr/src/app/app.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/usr/src/app/app.jar"]
