@@ -57,17 +57,7 @@ class AuthService {
      */
     fun getToken(code: String): ResponseEntity<CognitoJWT?> {
         val client = RestTemplate()
-
-        val headers = LinkedMultiValueMap<String, String>()
-
-        val auth = "$clientId:$clientSecret".toBase64()
-
-        headers.add("HeaderName", "value")
-        headers.add("Authorization", "Basic $auth")
-        headers.add("Content-Type", "application/x-www-form-urlencoded")
-
-        val req = HttpEntity<Nothing?>(null, headers)
-
+        val req = HttpEntity<Nothing?>(null, getHeaders())
         val url = "$tokenUrl?grant_type=authorization_code&client_id=$clientId&code=$code&redirect_uri=$callbackUrl"
 
         return try {
@@ -78,5 +68,20 @@ class AuthService {
             status(HttpStatus.UNAUTHORIZED)
                     .body(null)
         }
+    }
+
+    fun refreshToken(token: String?): CognitoJWT? {
+        val client = RestTemplate()
+        val req = HttpEntity<Nothing?>(null, getHeaders())
+        val url = "$tokenUrl?grant_type=refresh_token&client_id=$clientId&refresh_token=$token"
+        return client.postForObject(url, req, CognitoJWT::class.java)
+    }
+
+    private fun getHeaders(): LinkedMultiValueMap<String, String> {
+        val headers = LinkedMultiValueMap<String, String>()
+        headers.add("HeaderName", "value")
+        headers.add("Authorization", "Basic " + "$clientId:$clientSecret".toBase64())
+        headers.add("Content-Type", "application/x-www-form-urlencoded")
+        return headers
     }
 }
