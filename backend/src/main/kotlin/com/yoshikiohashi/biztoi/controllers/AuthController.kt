@@ -30,6 +30,9 @@ class AuthController(val authService: AuthService) {
     @Value("\${endpoints.authorize}")
     private val authorizeUrl: String = ""
 
+    @Value("\${endpoints.logout}")
+    private val logoutUrl: String = ""
+
     /**
      * Redirect user to correct url for authorization code
      */
@@ -44,6 +47,13 @@ class AuthController(val authService: AuthService) {
      * Get aws tokens with authorization code
      */
     @GetMapping("/token")
-    fun token(@RequestParam("code") code: String): CognitoJWT? =
+    fun token(@RequestParam("code") code: String): ResponseEntity<CognitoJWT?> =
             authService.getToken(code)
+
+    @GetMapping("/logout")
+    fun logout(): ResponseEntity<Any> =
+            ResponseEntity
+                    .status(HttpStatus.SEE_OTHER)
+                    .header(HttpHeaders.LOCATION, logoutUrl)
+                    .build()
 }

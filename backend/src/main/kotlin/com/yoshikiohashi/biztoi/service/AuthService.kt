@@ -4,11 +4,16 @@ import com.yoshikiohashi.biztoi.model.CognitoJWT
 import com.yoshikiohashi.biztoi.model.TokenClaims
 import com.nimbusds.jwt.JWTClaimsSet
 import com.yoshikiohashi.biztoi.toBase64
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.http.ResponseEntity.*
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import java.util.Date
 
@@ -50,7 +55,7 @@ class AuthService {
     /**
      * Get token with authorization code
      */
-    fun getToken(code: String): CognitoJWT? {
+    fun getToken(code: String): ResponseEntity<CognitoJWT?> {
         val client = RestTemplate()
 
         val headers = LinkedMultiValueMap<String, String>()
@@ -65,6 +70,13 @@ class AuthService {
 
         val url = "$tokenUrl?grant_type=authorization_code&client_id=$clientId&code=$code&redirect_uri=$callbackUrl"
 
-        return client.postForObject(url, req, CognitoJWT::class.java)
+        return try {
+            status(HttpStatus.OK)
+                    .body(client.postForObject(url, req, CognitoJWT::class.java))
+        } catch (e: HttpClientErrorException.BadRequest) {
+            LoggerFactory.getLogger(this.javaClass.simpleName).error("Bad request: ${e.message ?: "No message"}")
+            status(HttpStatus.UNAUTHORIZED)
+                    .body(null)
+        }
     }
 }
