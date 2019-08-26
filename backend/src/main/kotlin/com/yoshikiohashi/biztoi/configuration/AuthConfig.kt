@@ -3,6 +3,7 @@ package com.yoshikiohashi.biztoi.configuration
 import com.yoshikiohashi.biztoi.filter.AuthFilter
 import com.nimbusds.jose.proc.SecurityContext
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -16,6 +17,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
  */
 @EnableWebSecurity
 class AuthConfig(val processor: ConfigurableJWTProcessor<SecurityContext>) : WebSecurityConfigurerAdapter() {
+    @Value("\${urls.front}")
+    private val frontUrl: String = ""
+
     override fun configure(http: HttpSecurity) {
         http
                 .authorizeRequests()
@@ -39,7 +43,7 @@ class AuthConfig(val processor: ConfigurableJWTProcessor<SecurityContext>) : Web
         val corsConfiguration = CorsConfiguration()
         corsConfiguration.addAllowedMethod(CorsConfiguration.ALL)
         corsConfiguration.addAllowedHeader(CorsConfiguration.ALL)
-        corsConfiguration.addAllowedOrigin("http://localhost:3000")
+        corsConfiguration.addAllowedOrigin(frontUrl)
         corsConfiguration.setAllowCredentials(true)
 
         val corsConfigurationSource: UrlBasedCorsConfigurationSource = UrlBasedCorsConfigurationSource()

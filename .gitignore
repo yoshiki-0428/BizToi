@@ -4,6 +4,7 @@ build/
 !backend/gradle/wrapper/gradle-wrapper.jar
 !src/main/resources
 !**/src/test/**
+application-*.yml
 
 ### STS ###
 .apt_generated
