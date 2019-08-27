@@ -12,9 +12,11 @@ server:
 urls:
   cognito: http://example.com
   front: http://localhost:3000
+  logout: http://localhost:3000/logout
 endpoints:
   authorize: ${urls.cognito}/oauth2/authorize?response_type=code&client_id=${cognito.client}&redirect_uri=${cognito.callback}
   token: ${urls.cognito}/oauth2/token
+  logout: ${urls.cognito}/logout?client_id=${cognito.client}&redirect_uri=${urls.logout}
 cognito:
   client: example
   secret: example
