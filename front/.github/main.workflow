@@ -2,13 +2,14 @@ workflow "Build and Lint on push" {
   resolves = [
     "Lint",
     "Deploy",
+    "run",
   ]
   on = "push"
 }
 
 action "Install" {
   uses = "docker://node:10"
-  args = "cd front \\&& yarn install"
+  args = "yarn install"
 }
 
 action "Build" {
