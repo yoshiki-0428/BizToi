@@ -1,13 +1,24 @@
 # front
 
+## ライブラリの説明
+
+- [axios](https://github.com/axios/axios): APIとの通信ライブラリ
+- [moment](https://momentjs.com/): 時間を変換してくれるライブラリ
+- [vuetify](https://vuetifyjs.com/ja/components/api-explorer): CSSフレームワーク
+
 ## Project setup
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### Compiles and hot-reloads for normal
 ```
 yarn run serve
+```
+
+### Compiles and hot-reloads for development
+```
+yarn run dev-serve
 ```
 
 ### Compiles and minifies for production
@@ -29,6 +40,3 @@ yarn run lint
 ```
 yarn run test:unit
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
