@@ -4,10 +4,12 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    environment:
+      SPRING_ENVIRONMENT: 'development'
     ports:
       - 8000:8000
-    volumes:
-      - .:/work/
+#    volumes:
+#      - ./backend/:/usr/src/app/
     links:
       - mysql
   mysql:

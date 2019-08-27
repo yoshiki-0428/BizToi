@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-kt
+spec:
+  containers:
+  - name: kt
+    image: rrrtcdish2/ktapp:v2
+    ports:
+      - containerPort: 8000
