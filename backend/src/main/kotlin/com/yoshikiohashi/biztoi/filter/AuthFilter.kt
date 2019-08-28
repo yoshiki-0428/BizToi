@@ -6,47 +6,41 @@ import com.nimbusds.jose.proc.SecurityContext
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor
 import com.yoshikiohashi.biztoi.model.CognitoJWT
 import com.yoshikiohashi.biztoi.service.AuthService
-import com.yoshikiohashi.biztoi.toBase64
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpEntity
+import org.springframework.http.HttpStatus
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.web.client.RestTemplate
-import javax.servlet.FilterChain
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter
+import org.springframework.stereotype.Component
+import org.springframework.web.server.ServerWebExchange
+import org.springframework.web.server.WebFilter
+import org.springframework.web.server.WebFilterChain
+import reactor.core.publisher.Mono
 
 /**
  * Filter that handles jwt authentication.
  *
  * @property processor Processor for AWS ID token
  */
+@Component
 class AuthFilter(
         private val processor: ConfigurableJWTProcessor<SecurityContext>,
-        authenticationManager: AuthenticationManager,
         private val authService: AuthService
-) : BasicAuthenticationFilter(authenticationManager) {
-
-    override fun doFilterInternal(
-            req: HttpServletRequest,
-            res: HttpServletResponse,
-            chain: FilterChain
-    ) {
+) : WebFilter {
+    override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         try {
-            val token = extractToken(req.getHeader("Authorization"))
-            val authentication = extractAuthentication(token, req.getHeader("RefreshToken"))
+            val token = extractToken(exchange.response.headers.getFirst("Authorization"))
+            val authentication = extractAuthentication(token, exchange.response.headers.getFirst("RefreshToken"))
 
             SecurityContextHolder.getContext().authentication = authentication
-            chain.doFilter(req, res)
+            return chain.filter(exchange)
         } catch (e: AccessDeniedException) {
             LoggerFactory.getLogger(this.javaClass.simpleName).error("Access denied: ${e.message ?: "No message"}")
-            res.status = 401
-            res.writer.write("Access denied")
+            exchange.response.statusCode = HttpStatus.UNAUTHORIZED
         }
+        return chain.filter(exchange)
     }
 
     /**
