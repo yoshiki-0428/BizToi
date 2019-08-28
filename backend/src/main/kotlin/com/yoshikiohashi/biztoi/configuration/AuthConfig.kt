@@ -61,7 +61,7 @@ class AuthConfig(
         corsConfiguration.addAllowedMethod(CorsConfiguration.ALL)
         corsConfiguration.addAllowedHeader(CorsConfiguration.ALL)
         corsConfiguration.addAllowedOrigin(frontUrl)
-        corsConfiguration.setAllowCredentials(true)
+        corsConfiguration.allowCredentials = true
 
         val corsConfigurationSource: UrlBasedCorsConfigurationSource = UrlBasedCorsConfigurationSource()
         corsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration)
