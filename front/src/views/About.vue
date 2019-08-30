@@ -30,6 +30,7 @@ export default {
         }
       })
       .then(result => {
+        console.log(result)
         _this.tokenId = result.data.id_token;
         _this.accessToken = result.data.access_token;
         _this.refreshToken = result.data.refresh_token;

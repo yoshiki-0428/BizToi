@@ -1,37 +1,40 @@
 package com.yoshikiohashi.biztoi.configuration
 
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
+import reactor.core.publisher.Mono
+
 
 /**
  * Configuration for web security
  */
 @EnableWebFluxSecurity
-class AuthConfig(
-        val authenticationManager: AuthenticationManager,
-        val securityContextRepository: SecurityContextRepository
+class AuthConfig(private val securityContextRepository: SecurityContextRepository
 ) {
-
     @Bean
-    fun securityFilterChain(
-            http: ServerHttpSecurity
-    ): SecurityWebFilterChain {
+    fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         http
                 .httpBasic().disable()
                 .formLogin().disable()
                 .csrf().disable()
                 .logout().disable()
 
-        http.authenticationManager(this.authenticationManager)
-        http.securityContextRepository(this.securityContextRepository)
         http
-//                .addFilterAt(AuthFilter(processor, authService), SecurityWebFiltersOrder.AUTHENTICATION)
+                .securityContextRepository(this.securityContextRepository)
+
+        http
                 .authorizeExchange().pathMatchers("/api/auth/**").permitAll()
-        http.authorizeExchange().anyExchange().authenticated()
+                .and()
+                .authorizeExchange().anyExchange().authenticated()
 
         return http.build()
+    }
+
+    @Bean
+    fun authenticationManager(): ReactiveAuthenticationManager {
+        return ReactiveAuthenticationManager { authentication -> Mono.just(authentication) }
     }
 }

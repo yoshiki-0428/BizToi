@@ -3,13 +3,10 @@ package com.yoshikiohashi.biztoi.service
 import com.yoshikiohashi.biztoi.model.CognitoJWT
 import com.yoshikiohashi.biztoi.model.TokenClaims
 import com.nimbusds.jwt.JWTClaimsSet
-import com.yoshikiohashi.biztoi.toBase64
+import com.yoshikiohashi.biztoi.util.toBase64
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.http.ResponseEntity.*
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
@@ -46,8 +43,8 @@ class AuthService {
                 auth_time = details.getClaim("auth_time") as Long,
                 issued = details.getClaim("iat") as Date,
                 expire = details.getClaim("exp") as Date,
-                name = "test",
-                cognitoUserName = "aaa",
+                name = details.getClaim("name") as String,
+                cognitoUserName = details.getClaim("cognito_user+name") as String,
                 email = details.getStringClaim("email")
         )
     }
@@ -55,18 +52,18 @@ class AuthService {
     /**
      * Get token with authorization code
      */
-    fun getToken(code: String): ResponseEntity<CognitoJWT?> {
+    fun getToken(code: String): CognitoJWT? {
         val client = RestTemplate()
         val req = HttpEntity<Nothing?>(null, getHeaders())
         val url = "$tokenUrl?grant_type=authorization_code&client_id=$clientId&code=$code&redirect_uri=$callbackUrl"
+        print(url)
 
+        // TODO 非同期処理
         return try {
-            status(HttpStatus.OK)
-                    .body(client.postForObject(url, req, CognitoJWT::class.java))
+            client.postForObject(url, req, CognitoJWT::class.java)
         } catch (e: HttpClientErrorException.BadRequest) {
             LoggerFactory.getLogger(this.javaClass.simpleName).error("Bad request: ${e.message ?: "No message"}")
-            status(HttpStatus.UNAUTHORIZED)
-                    .body(null)
+            null
         }
     }
 
