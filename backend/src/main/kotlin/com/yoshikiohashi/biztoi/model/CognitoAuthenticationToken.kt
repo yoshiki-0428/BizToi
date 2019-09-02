@@ -1,7 +1,6 @@
 package com.yoshikiohashi.biztoi.model
 
-import com.nimbusds.jwt.JWTClaimsSet
-import org.springframework.security.authentication.AbstractAuthenticationToken
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 
 /**
@@ -11,12 +10,11 @@ import org.springframework.security.core.GrantedAuthority
  */
 class CognitoAuthenticationToken(
         private val token: String,
-        details: JWTClaimsSet,
+        details: TokenClaims,
         authorities: List<GrantedAuthority> = listOf()
-) : AbstractAuthenticationToken(authorities) {
+) : UsernamePasswordAuthenticationToken(details, authorities) {
     init {
         setDetails(details)
-        isAuthenticated = true
     }
 
     override fun getCredentials(): Any {

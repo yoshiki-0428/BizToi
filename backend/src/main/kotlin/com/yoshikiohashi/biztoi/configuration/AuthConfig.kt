@@ -1,11 +1,13 @@
 package com.yoshikiohashi.biztoi.configuration
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
-import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
-import reactor.core.publisher.Mono
+import org.springframework.web.reactive.config.CorsRegistry
+import org.springframework.web.reactive.config.WebFluxConfigurer
+import org.springframework.web.reactive.config.WebFluxConfigurerComposite
 
 
 /**
@@ -14,6 +16,9 @@ import reactor.core.publisher.Mono
 @EnableWebFluxSecurity
 class AuthConfig(private val securityContextRepository: SecurityContextRepository
 ) {
+    @Value("\${urls.front}")
+    val frontUrl: String = ""
+
     @Bean
     fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         http
@@ -34,7 +39,15 @@ class AuthConfig(private val securityContextRepository: SecurityContextRepositor
     }
 
     @Bean
-    fun authenticationManager(): ReactiveAuthenticationManager {
-        return ReactiveAuthenticationManager { authentication -> Mono.just(authentication) }
+    fun corsConfigurer(): WebFluxConfigurer {
+        return object : WebFluxConfigurerComposite() {
+            override fun addCorsMappings(registry: CorsRegistry) {
+                registry.addMapping("/**")
+                        .allowedOrigins(frontUrl)
+                        .allowedMethods("*")
+                        .allowedHeaders("*")
+                        .maxAge(3600)
+            }
+        }
     }
 }

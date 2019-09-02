@@ -7,6 +7,7 @@ import com.yoshikiohashi.biztoi.util.toBase64
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
+import org.springframework.scheduling.annotation.Async
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
@@ -36,17 +37,7 @@ class AuthService {
      */
     fun getClaims(): TokenClaims {
         val authentication = SecurityContextHolder.getContext().authentication
-        val details = authentication.details as JWTClaimsSet
-
-        return TokenClaims(
-                uuid = details.getStringClaim("sub"),
-                auth_time = details.getClaim("auth_time") as Long,
-                issued = details.getClaim("iat") as Date,
-                expire = details.getClaim("exp") as Date,
-                name = details.getClaim("name") as String,
-                cognitoUserName = details.getClaim("cognito_user+name") as String,
-                email = details.getStringClaim("email")
-        )
+        return authentication.details as TokenClaims
     }
 
     /**
@@ -58,7 +49,6 @@ class AuthService {
         val url = "$tokenUrl?grant_type=authorization_code&client_id=$clientId&code=$code&redirect_uri=$callbackUrl"
         print(url)
 
-        // TODO 非同期処理
         return try {
             client.postForObject(url, req, CognitoJWT::class.java)
         } catch (e: HttpClientErrorException.BadRequest) {

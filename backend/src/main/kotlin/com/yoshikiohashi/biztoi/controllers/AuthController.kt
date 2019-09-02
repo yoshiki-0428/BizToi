@@ -41,7 +41,6 @@ class AuthController(val authService: AuthService) {
      */
     fun token(req: ServerRequest): Mono<ServerResponse> {
         return ServerResponse
-                .ok().body(BodyInserters.fromObject(Mono.justOrEmpty(
-                        authService.getToken(req.queryParam("code").get()))))
+                .ok().body(BodyInserters.fromObject(authService.getToken(req.queryParam("code").get())!!))
     }
 }

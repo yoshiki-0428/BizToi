@@ -42,9 +42,10 @@ export default {
   methods: {
     getUser() {
       const bearer = `Bearer ${localStorage.getItem("idToken")}`;
-      const headers = { Authorization: bearer, RefreshToken: localStorage.refreshToken };
+      const headers = { Authorization: bearer, "Access-Control-Allow-Origin": "*" };
+
       axios
-          .get(process.env.VUE_APP_API_BASE_URL + "user/me", { headers })
+          .get(process.env.VUE_APP_API_BASE_URL + "users/me", { headers })
           .then(result => {
             console.log(result)
           })

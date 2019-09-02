@@ -1,8 +1,10 @@
 package com.yoshikiohashi.biztoi.util
 
 import com.nimbusds.jose.proc.SecurityContext
+import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor
 import com.yoshikiohashi.biztoi.model.CognitoAuthenticationToken
+import com.yoshikiohashi.biztoi.model.TokenClaims
 import com.yoshikiohashi.biztoi.service.AuthService
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -13,15 +15,12 @@ import org.springframework.stereotype.Component
 class AuthUtil(
         private val processor: ConfigurableJWTProcessor<SecurityContext>
 ) {
-    fun authentication(header: String?): UsernamePasswordAuthenticationToken {
+    fun authentication(header: String?): CognitoAuthenticationToken? {
         val token = extractToken(header)
         return if (token == null) {
-            UsernamePasswordAuthenticationToken("default", "default", emptyList())
+            CognitoAuthenticationToken("default", TokenClaims(), emptyList())
         } else {
-            UsernamePasswordAuthenticationToken(
-                    extractAuthentication(token)!!.principal, "default",
-                    listOf("ROLE_USER")
-                            .map { role -> SimpleGrantedAuthority(role) })
+            extractAuthentication(token)
         }
     }
 
@@ -44,9 +43,11 @@ class AuthUtil(
     @Throws(AccessDeniedException::class)
     fun extractAuthentication(token: String): CognitoAuthenticationToken? =
             try {
-                val claims = processor.process(token, null)
-                CognitoAuthenticationToken(token, claims)
+                val claims: JWTClaimsSet = processor.process(token, null)
+                CognitoAuthenticationToken(
+                        token, TokenClaims(claims),
+                        listOf("ROLE_USER").map { role -> SimpleGrantedAuthority(role) })
             } catch (e: Exception) {
-                throw AccessDeniedException("${e.javaClass.simpleName} (${e.message ?: "No message"})")
+                CognitoAuthenticationToken("default", TokenClaims(), emptyList())
             }
 }
