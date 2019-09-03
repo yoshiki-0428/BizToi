@@ -1,9 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Company from "./components/Company.vue";
-import Contact from "./components/Contact.vue";
-import Lesson from "./components/Lesson.vue";
-import Home from "./views/Home.vue";
 
 Vue.use(Router);
 
@@ -14,14 +10,27 @@ export default new Router({
     {
       path: "/",
       name: "home",
-      component: (Home) =>
-        import("./views/Home.vue")
+      component: () => import("./views/Home.vue")
     },
     {
       path: "/about",
       name: "about",
-      component: (About) =>
-        import("./views/About.vue")
+      component: () => import("./views/About.vue")
+    },
+    {
+      path: "/company",
+      name: "company",
+      component: () => import("./views/Company.vue")
+    },
+    {
+      path: "/contact",
+      name: "contact",
+      component: () => import("./views/Contact.vue")
+    },
+    {
+      path: "/lesson",
+      name: "company",
+      component: () => import("./views/Lesson.vue")
     }
   ]
 });
