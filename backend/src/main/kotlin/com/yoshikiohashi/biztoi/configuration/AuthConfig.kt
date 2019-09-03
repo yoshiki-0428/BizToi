@@ -1,53 +1,38 @@
 package com.yoshikiohashi.biztoi.configuration
 
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
-import org.springframework.web.reactive.config.CorsRegistry
-import org.springframework.web.reactive.config.WebFluxConfigurer
-import org.springframework.web.reactive.config.WebFluxConfigurerComposite
+import org.springframework.web.reactive.config.EnableWebFlux
 
 
 /**
  * Configuration for web security
  */
+@Configuration
 @EnableWebFluxSecurity
-class AuthConfig(private val securityContextRepository: SecurityContextRepository
+@EnableReactiveMethodSecurity
+@EnableWebFlux
+class AuthConfig(
+        private val securityContextRepository: SecurityContextRepository,
+        private val authenticationManager: AuthenticationManager
 ) {
-    @Value("\${urls.front}")
-    val frontUrl: String = ""
-
     @Bean
-    fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        http
-                .httpBasic().disable()
-                .formLogin().disable()
-                .csrf().disable()
-                .logout().disable()
-
-        http
-                .securityContextRepository(this.securityContextRepository)
-
-        http
-                .authorizeExchange().pathMatchers("/api/auth/**").permitAll()
-                .and()
-                .authorizeExchange().anyExchange().authenticated()
-
-        return http.build()
-    }
-
-    @Bean
-    fun corsConfigurer(): WebFluxConfigurer {
-        return object : WebFluxConfigurerComposite() {
-            override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/**")
-                        .allowedOrigins(frontUrl)
-                        .allowedMethods("*")
-                        .allowedHeaders("*")
-                        .maxAge(3600)
-            }
-        }
-    }
+    fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain = http
+            // basic, csrf, logout off
+            .httpBasic().disable()
+            .formLogin().disable()
+            .csrf().disable()
+            .logout().disable()
+            // 認証・認可の設定
+            .authenticationManager(authenticationManager)
+            .securityContextRepository(this.securityContextRepository)
+            .authorizeExchange()
+            // アクセス可能URL
+            .pathMatchers("/api/auth/**").permitAll()
+            .anyExchange().authenticated()
+            .and().build()
 }

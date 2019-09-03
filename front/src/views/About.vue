@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import axios from "axios";
+  import axios from "axios";
 
-export default {
+  export default {
   data: () => {
     return {
       tokenId: "",
@@ -42,7 +42,7 @@ export default {
   methods: {
     getUser() {
       const bearer = `Bearer ${localStorage.getItem("idToken")}`;
-      const headers = { Authorization: bearer, "Access-Control-Allow-Origin": "*" };
+      const headers = { Authorization: bearer};
 
       axios
           .get(process.env.VUE_APP_API_BASE_URL + "users/me", { headers })

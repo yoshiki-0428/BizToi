@@ -9,9 +9,7 @@ import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 
 @Component
-class SecurityContextRepository(
-        private val authUtil: AuthUtil
-): ServerSecurityContextRepository {
+class SecurityContextRepository(private val authUtil: AuthUtil): ServerSecurityContextRepository {
 
     override fun load(exchange: ServerWebExchange): Mono<SecurityContext> {
         val authentication = authUtil.authentication(exchange.request.headers.getFirst("Authorization"))

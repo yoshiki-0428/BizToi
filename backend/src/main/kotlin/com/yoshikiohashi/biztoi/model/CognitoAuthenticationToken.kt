@@ -1,6 +1,6 @@
 package com.yoshikiohashi.biztoi.model
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 
 /**
@@ -12,9 +12,10 @@ class CognitoAuthenticationToken(
         private val token: String,
         details: TokenClaims,
         authorities: List<GrantedAuthority> = listOf()
-) : UsernamePasswordAuthenticationToken(details, authorities) {
+) : AbstractAuthenticationToken(authorities) {
     init {
         setDetails(details)
+        isAuthenticated = true
     }
 
     override fun getCredentials(): Any {

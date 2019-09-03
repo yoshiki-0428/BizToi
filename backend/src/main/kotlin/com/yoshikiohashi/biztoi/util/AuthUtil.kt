@@ -5,9 +5,7 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor
 import com.yoshikiohashi.biztoi.model.CognitoAuthenticationToken
 import com.yoshikiohashi.biztoi.model.TokenClaims
-import com.yoshikiohashi.biztoi.service.AuthService
-import org.springframework.security.access.AccessDeniedException
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Component
 
@@ -17,8 +15,9 @@ class AuthUtil(
 ) {
     fun authentication(header: String?): CognitoAuthenticationToken? {
         val token = extractToken(header)
+        val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
         return if (token == null) {
-            CognitoAuthenticationToken("default", TokenClaims(), emptyList())
+            CognitoAuthenticationToken("default", TokenClaims(), ls)
         } else {
             extractAuthentication(token)
         }
@@ -40,14 +39,14 @@ class AuthUtil(
     /**
      * Extract authentication details from token
      */
-    @Throws(AccessDeniedException::class)
     fun extractAuthentication(token: String): CognitoAuthenticationToken? =
+            // TODO Role設定
             try {
                 val claims: JWTClaimsSet = processor.process(token, null)
-                CognitoAuthenticationToken(
-                        token, TokenClaims(claims),
-                        listOf("ROLE_USER").map { role -> SimpleGrantedAuthority(role) })
+                val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
+                CognitoAuthenticationToken(token, TokenClaims(claims), ls)
             } catch (e: Exception) {
-                CognitoAuthenticationToken("default", TokenClaims(), emptyList())
+                val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
+                CognitoAuthenticationToken("default", TokenClaims(), ls)
             }
 }
