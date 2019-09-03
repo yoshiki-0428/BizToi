@@ -1,13 +1,13 @@
 <template>
-  <v-content>
-    <v-btn @click="getUser">Get User</v-btn>
-    <H1>About Page!!</H1>
-    <h2>TokenId: {{ tokenId }}</h2>
-    <br />
-    <h2>AccessToken: {{ accessToken }}</h2>
-    <br />
-    <h2>RefreshToken: {{ refreshToken }}</h2>
-  </v-content>
+<v-content>
+  <v-btn @click="getUser">Get User</v-btn>
+  <H1>About Page!!</H1>
+  <h2>TokenId: {{ tokenId }}</h2>
+  <br />
+  <h2>AccessToken: {{ accessToken }}</h2>
+  <br />
+  <h2>RefreshToken: {{ refreshToken }}</h2>
+</v-content>
 </template>
 
 <script>
@@ -46,7 +46,9 @@ export default {
         RefreshToken: localStorage.refreshToken
       };
       axios
-        .get(process.env.VUE_APP_API_BASE_URL + "user/me", { headers })
+        .get(process.env.VUE_APP_API_BASE_URL + "user/me", {
+          headers
+        })
         .then(result => {
           console.log(result);
         });
