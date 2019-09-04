@@ -11,12 +11,13 @@ import com.nimbusds.jwt.proc.DefaultJWTProcessor
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.stereotype.Component
 import java.net.URL
 
 /**
  * Processor for AWS id token.
  */
-@Configuration
+@Component
 class JwtProcessor {
     @Value("\${cognito.keys}")
     private val keySource: String = ""

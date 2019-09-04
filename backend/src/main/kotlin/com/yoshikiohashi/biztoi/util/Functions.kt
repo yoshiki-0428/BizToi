@@ -1,4 +1,4 @@
-package com.yoshikiohashi.biztoi
+package com.yoshikiohashi.biztoi.util
 
 import java.util.Base64
 
