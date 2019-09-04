@@ -35,28 +35,26 @@ repositories {
 extra["springCloudVersion"] = "Hoxton.M1"
 
 dependencies {
-	compile("io.springfox:springfox-swagger2:2.9.2")
-	compile( "io.springfox:springfox-swagger-ui:2.9.2")
-	compile("com.nimbusds:nimbus-jose-jwt:5.12")
-	compile("com.amazonaws:aws-java-sdk-cognitoidp")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	runtimeOnly("org.springframework.boot:spring-boot-devtools")
-	implementation("org.flywaydb:flyway-core")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
+
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-//	implementation("org.springframework.cloud:spring-cloud-starter-aws")
-//	implementation("org.springframework.cloud:spring-cloud-starter-aws-jdbc")
-//	implementation("org.springframework.cloud:spring-cloud-starter-aws-messaging")
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	runtimeOnly("org.springframework.boot:spring-boot-devtools")
+	implementation("io.springfox:springfox-swagger2:2.9.2")
+	implementation("io.springfox:springfox-swagger-ui:2.9.2")
+	implementation("com.nimbusds:nimbus-jose-jwt:5.12")
+	implementation("com.amazonaws:aws-java-sdk-cognitoidp")
+	implementation("org.flywaydb:flyway-core")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("mysql:mysql-connector-java")
 	annotationProcessor("org.projectlombok:lombok")
+	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 		exclude(group = "junit", module = "junit")
 	}
-	testImplementation("org.springframework.security:spring-security-test")
 }
 
 dependencyManagement {

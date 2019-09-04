@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import axios from "axios";
+  import axios from "axios";
 
-export default {
+  export default {
   data: () => {
     return {
       tokenId: "",
@@ -30,6 +30,7 @@ export default {
         }
       })
       .then(result => {
+        console.log(result)
         _this.tokenId = result.data.id_token;
         _this.accessToken = result.data.access_token;
         _this.refreshToken = result.data.refresh_token;
@@ -41,12 +42,20 @@ export default {
   methods: {
     getUser() {
       const bearer = `Bearer ${localStorage.getItem("idToken")}`;
-      const headers = { Authorization: bearer, RefreshToken: localStorage.refreshToken };
-      axios
-          .get(process.env.VUE_APP_API_BASE_URL + "user/me", { headers })
-          .then(result => {
-            console.log(result)
-          })
+      const headers = {
+        Authorization: bearer
+      };
+      axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+
+      axios({
+        method: "GET",
+        url: process.env.VUE_APP_API_BASE_URL + "users/me",
+        headers: headers
+      }).then(result => {
+        console.log(result)
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 };
