@@ -17,8 +17,7 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @EnableReactiveMethodSecurity
 @EnableWebFlux
 class AuthConfig(
-        private val securityContextRepository: SecurityContextRepository,
-        private val authenticationManager: AuthenticationManager
+        private val securityContextRepository: SecurityContextRepository
 ) {
     @Bean
     fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain = http
@@ -28,7 +27,6 @@ class AuthConfig(
             .csrf().disable()
             .logout().disable()
             // 認証・認可の設定
-            .authenticationManager(authenticationManager)
             .securityContextRepository(this.securityContextRepository)
             .authorizeExchange()
             // アクセス可能URL

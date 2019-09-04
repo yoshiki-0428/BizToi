@@ -2,18 +2,15 @@ package com.yoshikiohashi.biztoi.service
 
 import com.yoshikiohashi.biztoi.model.CognitoJWT
 import com.yoshikiohashi.biztoi.model.TokenClaims
-import com.nimbusds.jwt.JWTClaimsSet
 import com.yoshikiohashi.biztoi.util.toBase64
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
-import org.springframework.scheduling.annotation.Async
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
-import java.util.Date
 
 /**
  * Service for authentication

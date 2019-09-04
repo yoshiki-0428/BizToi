@@ -26,7 +26,7 @@ class AuthUtil(
     /**
      * Extract token from header
      */
-    private fun extractToken(header: String?): String? {
+    fun extractToken(header: String?): String? {
         val headers = header?.split("Bearer ")
 
         return if (headers == null || headers.size < 2) {
