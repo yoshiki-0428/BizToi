@@ -9,7 +9,7 @@
 
 <script>
 import Logo from "../components/Logo";
-import LoginButton from "../components/LoginButton"
+import LoginButton from "../components/LoginButton";
 
 export default {
   components: {

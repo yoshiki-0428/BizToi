@@ -2,11 +2,7 @@
   <v-container>
     <v-layout text-center wrap>
       <v-flex xs12>
-        <v-btn
-          color="red"
-          :href="url"
-          target="_self"
-          dark
+        <v-btn color="red" :href="url" target="_self" dark
           >新規登録 / ログインはこちらから
         </v-btn>
       </v-flex>
