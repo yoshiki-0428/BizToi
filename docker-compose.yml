@@ -20,4 +20,4 @@ services:
       MYSQL_PASSWORD: biztoi
       MYSQL_ROOT_PASSWORD: biztoi
     ports:
-      - 3306:3306
+      - 3307:3306

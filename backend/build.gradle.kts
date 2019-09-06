@@ -1,9 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+import org.jetbrains.kotlin.resolve.calls.model.ResolvedCallArgument.DefaultArgument.arguments
 
 plugins {
 	id("org.springframework.boot") version "2.1.6.RELEASE"
 	id("io.spring.dependency-management") version "1.0.7.RELEASE"
+	id("org.flywaydb.flyway") version "6.0.1"
+
 	kotlin("jvm") version "1.3.50"
 	kotlin("plugin.spring") version "1.3.50"
 	kotlin("kapt") version "1.3.50"
@@ -17,6 +20,13 @@ idea {
 		outputDir = file("build/classes/main")
 		testOutputDir = file("build/classes/test")
 	}
+}
+
+flyway {
+	url = "jdbc:mysql://localhost:3307/BizToi"
+	user = "biztoi"
+	password = "biztoi"
+	schemas = arrayOf("BizToi")
 }
 
 group = "com.yoshikiohashi"
