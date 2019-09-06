@@ -3,9 +3,10 @@ package com.yoshikiohashi.biztoi.controllers
 import com.yoshikiohashi.biztoi.service.AuthService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.ServerResponse.badRequest
+import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Mono
 import java.net.URI
 
@@ -33,8 +34,10 @@ class AuthController(val authService: AuthService) {
     /**
      * Get aws tokens with authorization code
      */
-    fun token(req: ServerRequest): Mono<ServerResponse> {
-        return ServerResponse
-                .ok().body(BodyInserters.fromObject(authService.getToken(req.queryParam("code").get())!!))
-    }
+    fun token(req: ServerRequest): Mono<ServerResponse> =
+            authService.getToken(req.queryParam("code").get())?.let {
+                ok().syncBody(it)
+            } ?:run {
+                badRequest().build()
+            }
 }

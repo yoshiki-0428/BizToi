@@ -41,6 +41,7 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.1")
 	runtimeOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("io.springfox:springfox-swagger2:2.9.2")
 	implementation("io.springfox:springfox-swagger-ui:2.9.2")
