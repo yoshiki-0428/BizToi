@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 
 plugins {
 	id("org.springframework.boot") version "2.1.6.RELEASE"
 	id("io.spring.dependency-management") version "1.0.7.RELEASE"
 	kotlin("jvm") version "1.3.50"
 	kotlin("plugin.spring") version "1.3.50"
+	kotlin("kapt") version "1.3.50"
 	java
 	idea
 }
@@ -30,6 +32,16 @@ configurations {
 repositories {
 	mavenCentral()
 	maven { url = uri("https://repo.spring.io/milestone") }
+	maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
+}
+
+val compileKotlin: KotlinCompile by tasks
+
+kapt {
+	useBuildCache = true
+	arguments {
+		arg("doma.resources.dir", compileKotlin.destinationDir)
+	}
 }
 
 extra["springCloudVersion"] = "Hoxton.M1"
@@ -47,8 +59,9 @@ dependencies {
 	implementation("io.springfox:springfox-swagger-ui:2.9.2")
 	implementation("com.nimbusds:nimbus-jose-jwt:5.12")
 	implementation("com.amazonaws:aws-java-sdk-cognitoidp")
+	compile("org.seasar.doma.boot:doma-spring-boot-starter:1.1.1")
+	kapt("org.seasar.doma:doma:2.25.1")
 	implementation("org.seasar.doma:doma:2.25.1")
-	implementation("org.flywaydb:flyway-core:4.2.0")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("mysql:mysql-connector-java")
 	annotationProcessor("org.projectlombok:lombok")
@@ -65,11 +78,20 @@ dependencyManagement {
 	}
 }
 
+tasks.register("copyDomaResources", Sync::class){
+	from("src/main/resources")
+	into(compileKotlin.destinationDir)
+	include("doma.compile.config")
+	include("META-INF/**/*.sql")
+	include("META-INF/**/*.script")
+}
+
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile> {
+	dependsOn(tasks.getByName("copyDomaResources"))
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
 		jvmTarget = "1.8"
