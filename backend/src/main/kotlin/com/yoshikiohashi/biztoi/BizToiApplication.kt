@@ -1,26 +1,15 @@
 package com.yoshikiohashi.biztoi
 
-import org.flywaydb.core.Flyway
-import org.springframework.beans.factory.annotation.Value
+import com.yoshikiohashi.biztoi.util.FlywayUtil
+import org.springframework.beans.factory.getBean
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
 class BizToiApplication
 
-@Value("\${spring.datasource.url}")
-private val url: String = ""
-
-@Value("\${spring.datasource.username}")
-private val username: String = ""
-
-@Value("\${spring.datasource.password}")
-private val password: String = ""
-
 fun main(args: Array<String>) {
-	runApplication<BizToiApplication>(*args)
-	val flyway = Flyway()
-	flyway.setDataSource(url, username, password)
-	flyway.repair()
-	flyway.migrate()
+	val run = runApplication<BizToiApplication>(*args)
+	val flywayUtil: FlywayUtil = run.getBean(FlywayUtil::class)
+	flywayUtil.migrate()
 }

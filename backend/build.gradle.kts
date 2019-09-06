@@ -5,13 +5,11 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.7.RELEASE"
 	kotlin("jvm") version "1.3.50"
 	kotlin("plugin.spring") version "1.3.50"
-	kotlin("kapt") version "1.3.50"
 	java
 	idea
 }
 
 apply(plugin = "idea")
-apply(plugin = "kotlin-kapt")
 idea {
 	module {
 		outputDir = file("build/classes/main")
@@ -34,10 +32,6 @@ repositories {
 	maven { url = uri("https://repo.spring.io/milestone") }
 }
 
-kapt {
-	useBuildCache = true
-}
-
 extra["springCloudVersion"] = "Hoxton.M1"
 
 dependencies {
@@ -53,9 +47,8 @@ dependencies {
 	implementation("io.springfox:springfox-swagger-ui:2.9.2")
 	implementation("com.nimbusds:nimbus-jose-jwt:5.12")
 	implementation("com.amazonaws:aws-java-sdk-cognitoidp")
-	kapt("org.seasar.doma:doma:2.25.1")
 	implementation("org.seasar.doma:doma:2.25.1")
-	implementation("org.flywaydb:flyway-core:4.0.3")
+	implementation("org.flywaydb:flyway-core:4.2.0")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("mysql:mysql-connector-java")
 	annotationProcessor("org.projectlombok:lombok")
@@ -70,19 +63,6 @@ dependencyManagement {
 	imports {
 		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
 	}
-}
-
-tasks.named<JavaCompile>("compileJava") {
-	dependsOn("copyDomaResources")
-}
-
-task("copyDomaResources", Sync::class) {
-	from("sourceSets.main.resources.srcDirs")
-	into("compileJava.destinationDir")
-	include(
-			"doma.compile.config",
-			"META-INF/**/*.sql"
-	)
 }
 
 tasks.withType<Test> {
