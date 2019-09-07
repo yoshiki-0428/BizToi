@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   api:
     build:
@@ -19,5 +19,6 @@ services:
       MYSQL_USER: biztoi
       MYSQL_PASSWORD: biztoi
       MYSQL_ROOT_PASSWORD: biztoi
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     ports:
       - 3307:3306
