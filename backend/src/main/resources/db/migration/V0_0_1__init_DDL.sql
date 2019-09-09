@@ -1,5 +1,5 @@
 create table user (
-\    ID int primary key not null comment 'USER ID',
+    ID int primary key not null comment 'USER ID',
     ID_TOKEN text not null comment '一時的アクセスのためのトークン',
     ACCESS_TOKEN text not null comment '一時的アクセスのためのトークン',
     REFRESH_TOKEN text not null comment 'アクセストークン更新のためのトークン'
