@@ -2,12 +2,21 @@
   <v-container>
     <v-flex xs12 md12>
       <h1>学びたい書籍を選択してください</h1>
-      <form v-on:submit.prevent="getResult(word)">
-        <p>
-          Search：
-          <input type="search" placeholder="キーワードを入力" v-model="word" />
-        </p>
-      </form>
+      <v-row>
+        <v-col cols="12" sm="6">
+          <v-form ref="form" @submit.prevent>
+            <v-text-field
+              v-model="word"
+              label="書籍検索キーワード"
+              outlined
+              rows="1"
+              row-height="15"
+            >
+            </v-text-field>
+            <v-btn class="mr-4" @click="getResult(word)">検索</v-btn>
+          </v-form>
+        </v-col>
+      </v-row>
       <div class="books_list">
         <v-card class="book_card" v-for="item in items">
           <v-flex md6>
@@ -77,11 +86,14 @@ export default {
 <style>
 .books_list {
   width: 100%;
+  text-align: center;
 }
 .book_card {
   box-sizing: border-box;
   -webkit-box-pack: center;
-  width: 25%;
-  float: none;
+  width: 30%;
+  height: 350px;
+  margin: 10px 20px 20px 10px;
+  float: left;
 }
 </style>
