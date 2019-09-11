@@ -4,28 +4,27 @@
       <h1>学びたい書籍を選択してください</h1>
       <v-row>
         <v-col cols="12" sm="6">
-          <v-form ref="form" @submit.prevent>
-            <v-text-field
-              v-model="word"
-              label="書籍検索キーワード"
-              outlined
-              rows="1"
-              row-height="15"
-            >
-            </v-text-field>
-            <v-btn class="mr-4" @click="getResult(word)">検索</v-btn>
-          </v-form>
+          <v-text-field
+            v-model="word"
+            label="書籍検索キーワード"
+            outlined
+            rows="1"
+            row-height="15"
+          >
+          </v-text-field>
+          <v-btn class="mr-4" @click="getResult(word)">検索</v-btn>
         </v-col>
       </v-row>
       <div class="books_list">
         <v-card class="book_card" v-for="item in items">
-          <v-flex md6>
+          <v-flex>
             <img
               class="card-img"
+              v-if="item.volumeInfo.imageLinks"
               v-bind:src="item.volumeInfo.imageLinks.thumbnail"
             />
           </v-flex>
-          <v-flex md6>
+          <v-flex>
             <div class="card-body">
               <h5 class="card-title">{{ item.volumeInfo.title }}</h5>
               <p class="card-text">{{ item.volumeInfo.authors }}</p>
@@ -43,13 +42,14 @@
 </template>
 
 <script>
-import axios from "axios";
+  import axios from "axios";
+  import _ from "lodash"
 
-export default {
-  el: "BooksSearch",
+  export default {
   data() {
     return {
       word: "",
+      url: "https://www.googleapis.com/books/v1/volumes",
       items: [],
       isLoading: true
     };
@@ -57,21 +57,26 @@ export default {
   watch: {
     word() {
       this.isLoading = true;
-      this.debouncedGetResult();
+      if (this.word)
+        this.debouncedGetResult();
     }
   },
   created() {
-    this.getResult();
-    this.debouncedGetResult = _.debounce(this.getResult, 800);
+    this.debouncedGetResult = _.debounce(this.getResult, 400);
   },
   methods: {
     getResult: function() {
+      const params = {
+        q: `${this.word}`, // 検索キーワード。intitle:で書籍名が対象に
+        Country: "JP",           // 国の指定。JPで日本の指定
+        maxResults: 40,          // 取得する検索件数。10~40件を指定可。デフォルトは10件
+        orderBy: "relevance"     // 取得する順番、relevance: 関連順 newest: 最新順
+      };
       axios
-        .get(
-          `https://www.googleapis.com/books/v1/volumes?q=search"${this.word}`
-        )
+        .get(this.url, {params: params})
         .then(response => {
           this.items = response.data.items;
+          console.log(this.items);
           this.isLoading = false;
         })
         .catch(err => {
