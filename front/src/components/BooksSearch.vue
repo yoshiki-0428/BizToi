@@ -4,19 +4,26 @@
       <h1>学びたい書籍を選択してください</h1>
       <v-row>
         <v-col cols="12" sm="6">
-          <v-text-field
-            v-model="word"
+          <v-autocomplete
+            :items="suggestWords"
+            :loading="isLoading"
+            :search-input.sync="word"
             label="書籍検索キーワード"
+            placeholder="Search..."
             outlined
             rows="1"
             row-height="15"
+            no-filter
+            hide-no-data
+            hide-selected
+            item-value="API"
           >
-          </v-text-field>
+          </v-autocomplete>
           <v-btn class="mr-4" @click="getResult(word)">検索</v-btn>
         </v-col>
       </v-row>
       <div class="books_list">
-        <v-card class="book_card" v-for="item in items">
+        <v-card class="book_card" v-for="item in items" :key="item.id">
           <v-flex>
             <img
               class="card-img"
@@ -42,23 +49,23 @@
 </template>
 
 <script>
-  import axios from "axios";
-  import _ from "lodash"
+import axios from "axios";
+import _ from "lodash";
 
-  export default {
+export default {
   data() {
     return {
-      word: "",
+      word: null,
       url: "https://www.googleapis.com/books/v1/volumes",
       items: [],
-      isLoading: true
+      suggestWords: [],
+      isLoading: false
     };
   },
   watch: {
     word() {
+      if (this.word) this.debouncedGetResult();
       this.isLoading = true;
-      if (this.word)
-        this.debouncedGetResult();
     }
   },
   created() {
@@ -73,10 +80,12 @@
         orderBy: "relevance"     // 取得する順番、relevance: 関連順 newest: 最新順
       };
       axios
-        .get(this.url, {params: params})
+        .get(this.url, { params: params })
         .then(response => {
           this.items = response.data.items;
-          console.log(this.items);
+          this.suggestWords = this.items.map(item => {
+            return item.volumeInfo.title;
+          });
           this.isLoading = false;
         })
         .catch(err => {
