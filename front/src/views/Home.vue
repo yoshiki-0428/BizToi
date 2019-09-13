@@ -1,20 +1,17 @@
 <template>
   <v-container>
     <v-layout text-center wrap>
-      <logo />
-      <login-button />
+      <introduce-app />
     </v-layout>
   </v-container>
 </template>
 
 <script>
-import Logo from "../components/Logo";
-import LoginButton from "../components/LoginButton";
+import IntroduceApp from "../components/IntroduceApp";
 
 export default {
   components: {
-    Logo,
-    LoginButton
+    IntroduceApp
   }
 };
 </script>

@@ -3,9 +3,9 @@
     <v-btn @click="getUser">Get User</v-btn>
     <H1>About Page!!</H1>
     <h2>TokenId: {{ tokenId }}</h2>
-    <br />
+    <br/>
     <h2>AccessToken: {{ accessToken }}</h2>
-    <br />
+    <br/>
     <h2>RefreshToken: {{ refreshToken }}</h2>
   </v-content>
 </template>
