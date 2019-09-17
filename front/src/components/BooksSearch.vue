@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <v-flex xs12 md12>
-      <h1>学びたい書籍を選択してください</h1>
       <v-row>
         <v-col cols="12" sm="6">
           <v-autocomplete
@@ -25,8 +24,7 @@
       <div class="books_list">
         <v-card class="book_card" v-for="item in items" :key="item.id">
           <v-flex>
-            <img
-              class="card-img"
+            <img class="card-img"
               v-if="item.volumeInfo.imageLinks"
               v-bind:src="item.volumeInfo.imageLinks.thumbnail"
             />
@@ -36,9 +34,8 @@
               <h5 class="card-title">{{ item.volumeInfo.title }}</h5>
               <p class="card-text">{{ item.volumeInfo.authors }}</p>
               <p class="card-text">
-                <small class="text-muted">{{
-                  item.volumeInfo.publisher
-                }}</small>
+                <small class="text-muted">
+                  {{ item.volumeInfo.publisher }}</small}}</small>
               </p>
             </div>
           </v-flex>
@@ -51,7 +48,6 @@
 <script>
 import axios from "axios";
 import _ from "lodash";
-
 export default {
   data() {
     return {
@@ -82,32 +78,32 @@ export default {
       axios
         .get(this.url, { params: params })
         .then(response => {
-          this.items = response.data.items;
-          this.suggestWords = this.items.map(item => {
-            return item.volumeInfo.title;
-          });
-          this.isLoading = false;
-        })
-        .catch(err => {
-          this.isLoading = false;
-          console.log(err);
-        });
+                  this.items = response.data.items;
+                  this.suggestWords = this.items.map(item => {
+                    return item.volumeInfo.title;
+                  });
+                  this.isLoading = false;
+                })
+                .catch(err => {
+                  this.isLoading = false;
+                  console.log(err);
+                });
+      }
     }
-  }
-};
+  };
 </script>
 
 <style>
-.books_list {
-  width: 100%;
-  text-align: center;
-}
-.book_card {
-  box-sizing: border-box;
-  -webkit-box-pack: center;
-  width: 30%;
-  height: 350px;
-  margin: 10px 20px 20px 10px;
-  float: left;
-}
+  .books_list {
+    width: 100%;
+    text-align: center;
+  }
+  .book_card {
+    box-sizing: border-box;
+    -webkit-box-pack: center;
+    width: 30%;
+    height: 350px;
+    margin: 10px 20px 20px 10px;
+    float: left;
+  }
 </style>

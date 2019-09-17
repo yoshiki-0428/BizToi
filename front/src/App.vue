@@ -1,15 +1,18 @@
 <template>
   <v-app>
-    <main-header />
-    <v-content>
+      <v-layout>
+          <v-flex xs12>
+      <main-header />
+<v-content>
       <router-view />
-    </v-content>
+</v-content>
+          </v-flex>
+      </v-layout>
   </v-app>
 </template>
 
 <script>
-import MainHeader from "./components/MainHeader";
-
+  import MainHeader from "./components/MainHeader";
 export default {
   name: "App",
   components: {
