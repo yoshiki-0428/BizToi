@@ -61,7 +61,12 @@ class AuthService {
         val client = RestTemplate()
         val req = HttpEntity<Nothing?>(null, getHeaders())
         val url = "$tokenUrl?grant_type=refresh_token&client_id=$clientId&refresh_token=$token"
-        return client.postForObject(url, req, CognitoJWT::class.java)
+        return try {
+            client.postForObject(url, req, CognitoJWT::class.java)
+        } catch (e: BadRequest) {
+            LoggerFactory.getLogger(this.javaClass.simpleName).error("Bad request: ${e.message ?: "No message"}")
+            null
+        }
     }
 
     private fun getHeaders(): LinkedMultiValueMap<String, String> {

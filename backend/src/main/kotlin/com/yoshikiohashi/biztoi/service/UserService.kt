@@ -16,16 +16,22 @@ class UserService(
 
         // user作成
         return if (user == null) {
-            userRepository.create(User(
-                    claims.uuid,
-                    cognitoJWT.id_token,
-                    cognitoJWT.access_token,
-                    cognitoJWT.refresh_token
-            ))
+            userRepository.create(mapping(claims, cognitoJWT))
             return cognitoJWT.id_token
         } else {
             user.idToken
         }
     }
 
+    fun updateToken(claims: TokenClaims, cognitoJWT: CognitoJWT) {
+        userRepository.update(mapping(claims, cognitoJWT))
+    }
+
+    private fun mapping(claims: TokenClaims, cognitoJWT: CognitoJWT) =
+            User(
+                    claims.uuid,
+                    cognitoJWT.id_token,
+                    cognitoJWT.access_token,
+                    cognitoJWT.refresh_token
+            )
 }

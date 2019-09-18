@@ -25,12 +25,10 @@ class UserRepository(private val ctx: DSLContext) {
             .values(user.id, user.idToken, user.accessToken, user.refreshToken)
             .execute()
 
-    fun update(user: User): User = ctx
+    fun update(user: User): Int = ctx
             .update(USER)
             .set(USER.ID_TOKEN, user.idToken)
             .set(USER.ACCESS_TOKEN, user.accessToken)
             .where(USER.ID.eq(user.id))
-            .returning(USER.ID)
-            .fetchOne()
-            .into(User::class.java)
+            .execute()
 }

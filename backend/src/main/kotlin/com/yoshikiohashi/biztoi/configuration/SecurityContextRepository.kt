@@ -14,7 +14,6 @@ class SecurityContextRepository(private val authUtil: AuthUtil): ServerSecurityC
 
     override fun load(exchange: ServerWebExchange): Mono<SecurityContext> {
         val authentication: CognitoAuthenticationToken? = authUtil.authentication(exchange.request.headers.getFirst("Authorization"))
-        exchange.response.headers.add("BIZ_TOI_TOKEN", authentication!!.token)
         return Mono.just(SecurityContextImpl(authentication))
     }
 
