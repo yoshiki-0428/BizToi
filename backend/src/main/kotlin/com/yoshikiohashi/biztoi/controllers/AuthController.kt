@@ -1,6 +1,9 @@
 package com.yoshikiohashi.biztoi.controllers
 
+import com.yoshikiohashi.biztoi.Tables.BOOK
 import com.yoshikiohashi.biztoi.service.AuthService
+import com.yoshikiohashi.biztoi.tables.pojos.Book
+import org.jooq.DSLContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -15,7 +18,7 @@ import java.net.URI
  * Auth endpoints
  */
 @Component
-class AuthController(val authService: AuthService) {
+class AuthController(val authService: AuthService, private val dslContext: DSLContext) {
     @Value("\${endpoints.authorize}")
     private val authorizeUrl: String = ""
 
@@ -40,4 +43,11 @@ class AuthController(val authService: AuthService) {
             } ?:run {
                 badRequest().build()
             }
+
+    fun jooqTest(req: ServerRequest): Mono<ServerResponse> {
+        return ok().syncBody(dslContext.select()
+                .from(BOOK)
+                .fetch()
+                .into(Book::class.java))
+    }
 }

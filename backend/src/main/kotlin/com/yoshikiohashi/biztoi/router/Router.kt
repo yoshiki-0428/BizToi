@@ -22,6 +22,7 @@ class Router(
                 }
                 accept(MediaType.APPLICATION_JSON_UTF8).nest {
                     GET("/token", authController::token)
+                    GET("/jooqTest", authController::jooqTest)
                 }
             }
 
