@@ -1,7 +1,6 @@
 package com.yoshikiohashi.biztoi.util
 
 import com.nimbusds.jose.proc.SecurityContext
-import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor
 import com.yoshikiohashi.biztoi.model.CognitoAuthenticationToken
 import com.yoshikiohashi.biztoi.model.TokenClaims
@@ -42,11 +41,12 @@ class AuthUtil(
     fun extractAuthentication(token: String): CognitoAuthenticationToken? =
             // TODO Role設定
             try {
-                val claims: JWTClaimsSet = processor.process(token, null)
                 val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
-                CognitoAuthenticationToken(token, TokenClaims(claims), ls)
+                CognitoAuthenticationToken(token, getClaims(token), ls)
             } catch (e: Exception) {
                 val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
                 CognitoAuthenticationToken("default", TokenClaims(), ls)
             }
+
+    fun getClaims(token: String) = TokenClaims(processor.process(token, null))
 }
