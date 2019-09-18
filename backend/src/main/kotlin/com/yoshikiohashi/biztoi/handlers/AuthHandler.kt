@@ -1,4 +1,4 @@
-package com.yoshikiohashi.biztoi.controllers
+package com.yoshikiohashi.biztoi.handlers
 
 import com.yoshikiohashi.biztoi.service.AuthService
 import org.jooq.DSLContext
@@ -16,7 +16,7 @@ import java.net.URI
  * Auth endpoints
  */
 @Component
-class AuthController(val authService: AuthService, private val dslContext: DSLContext) {
+class AuthHandler(val authService: AuthService, private val dslContext: DSLContext) {
     @Value("\${endpoints.authorize}")
     private val authorizeUrl: String = ""
 

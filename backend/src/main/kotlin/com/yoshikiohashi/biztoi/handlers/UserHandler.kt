@@ -1,4 +1,4 @@
-package com.yoshikiohashi.biztoi.controllers
+package com.yoshikiohashi.biztoi.handlers
 
 import com.yoshikiohashi.biztoi.service.AuthService
 import org.springframework.http.MediaType
@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono
  * User endpoints, require authentication
  */
 @RestController
-class UserController(val authService: AuthService) {
+class UserHandler(val authService: AuthService) {
     fun getCurrentUser(req: ServerRequest): Mono<ServerResponse> =
         ok().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .syncBody(authService.getClaims())
