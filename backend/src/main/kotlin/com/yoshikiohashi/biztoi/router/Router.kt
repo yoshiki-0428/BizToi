@@ -2,6 +2,7 @@ package com.yoshikiohashi.biztoi.router
 
 import com.yoshikiohashi.biztoi.controllers.AuthController
 import com.yoshikiohashi.biztoi.controllers.UserController
+import com.yoshikiohashi.biztoi.repositories.BookRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
@@ -10,7 +11,8 @@ import org.springframework.web.reactive.function.server.router
 @Configuration
 class Router(
         private val authController: AuthController,
-        private val userController: UserController
+        private val userController: UserController,
+        private val bookRepository: BookRepository
 ) {
     @Bean
     fun apiRouter() = router {
@@ -22,12 +24,15 @@ class Router(
                 }
                 accept(MediaType.APPLICATION_JSON_UTF8).nest {
                     GET("/token", authController::token)
-                    GET("/jooqTest", authController::jooqTest)
                 }
             }
 
             "/users".nest {
                 GET("/me", userController::getCurrentUser)
+            }
+
+            "/books".nest {
+                GET("/") { ok().syncBody(bookRepository.findAll()) }
             }
         }
     }

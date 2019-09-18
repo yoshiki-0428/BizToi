@@ -1,8 +1,6 @@
 package com.yoshikiohashi.biztoi.controllers
 
-import com.yoshikiohashi.biztoi.Tables.BOOK
 import com.yoshikiohashi.biztoi.service.AuthService
-import com.yoshikiohashi.biztoi.tables.pojos.Book
 import org.jooq.DSLContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -43,11 +41,4 @@ class AuthController(val authService: AuthService, private val dslContext: DSLCo
             } ?:run {
                 badRequest().build()
             }
-
-    fun jooqTest(req: ServerRequest): Mono<ServerResponse> {
-        return ok().syncBody(dslContext.select()
-                .from(BOOK)
-                .fetch()
-                .into(Book::class.java))
-    }
 }
