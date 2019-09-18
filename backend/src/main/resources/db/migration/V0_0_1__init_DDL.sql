@@ -12,7 +12,7 @@ charset=utf8;
 
 create table user
 (
-	ID int not null comment 'USER ID'
+	ID varchar(128) not null comment 'USER ID'
 		primary key,
 	ID_TOKEN text not null comment '一時的アクセスのためのトークン',
 	ACCESS_TOKEN text not null comment '一時的アクセスのためのトークン',
@@ -24,7 +24,7 @@ create table toi
 (
 	ID int auto_increment comment '問題(Toi)のID'
 		primary key,
-	USER_ID int not null comment '所有者',
+	USER_ID varchar(128) not null comment '所有者',
 	BOOK_ID int null comment '参考本',
 	PICTURE_URL varchar(255) null comment '問題に画像を付ける場合',
 	TITLE varchar(255) null comment '問題集タイトル',
@@ -60,7 +60,7 @@ create table answer
 (
 	ID int auto_increment comment '回答ID'
 		primary key,
-	USER_ID int not null comment '所有者',
+	USER_ID varchar(128) not null comment '所有者',
 	QUESTION_ID int not null comment '質問と紐づくID',
 	ANSWER text null comment '回答内容',
 	INSERT_DATE datetime null,
@@ -78,7 +78,7 @@ create table talk
 	ID int auto_increment comment '本ID'
 		primary key,
 	TOI_ID int not null comment '問題集と紐づくID',
-	USER_ID int not null comment '所有者',
+	USER_ID varchar(128) not null comment '所有者',
 	TALK_ID int null comment '返信した場合、紐付けをする',
 	COMMENT varchar(255) null comment 'コメント',
 	INSERT_DATE datetime null,
@@ -86,6 +86,6 @@ create table talk
 	constraint talk_talk_ID_fk
 		foreign key (TALK_ID) references talk (ID),
 	constraint talk_toi_ID_fk
-		foreign key (USER_ID) references toi (ID)
+		foreign key (TOI_ID) references toi (ID)
 )
 charset=utf8;
