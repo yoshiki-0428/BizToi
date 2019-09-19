@@ -1,5 +1,6 @@
 package com.yoshikiohashi.biztoi.util
 
+import com.nimbusds.jose.JOSEException
 import com.nimbusds.jose.proc.SecurityContext
 import com.nimbusds.jwt.proc.BadJWTException
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor
@@ -43,13 +44,13 @@ class AuthUtil(
      * Extract authentication details from token
      */
     fun extractAuthentication(token: String): CognitoAuthenticationToken? {
-        // TODO Role設定
+        // TODO Role設定, Refactoring
+        val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
         return try {
-            val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
             CognitoAuthenticationToken(token, getClaims(token), ls)
-        } catch (je: BadJWTException) {
-            val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
-            return authService.refreshToken(token)?.let {
+        } catch (je: JOSEException) {
+            val refreshToken = userService.getRefreshToken(token)
+            return authService.refreshToken(refreshToken)?.let {
                 val tokenClaims = getClaims(it.id_token)
                 userService.updateToken(tokenClaims, it)
                 CognitoAuthenticationToken(it.id_token, tokenClaims, ls)

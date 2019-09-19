@@ -19,6 +19,11 @@ class UserRepository(private val ctx: DSLContext) {
             .where(USER.ID.eq(id))
             .fetchOne()
 
+    fun findOneIdToken(idToken: String): UserRecord? = ctx
+            .selectFrom(USER)
+            .where(USER.ID_TOKEN.eq(idToken))
+            .fetchOne()
+
     fun create(user: User): Int = ctx
             .insertInto(USER,
                     USER.ID, USER.ID_TOKEN, USER.ACCESS_TOKEN, USER.REFRESH_TOKEN)
