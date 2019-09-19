@@ -7,7 +7,7 @@
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-md-and-down">
-      <v-btn v-for="item in menu" :key="item.icon" :to="item.link">
+      <v-btn text v-for="item in menu" :key="item.icon" :to="item.link">
         <v-list-item-icon>
           <v-icon v-text="item.icon"></v-icon>
         </v-list-item-icon>
@@ -16,12 +16,12 @@
     </v-toolbar-items>
     <v-menu>
       <template v-slot:activator="{ on }">
-        <v-btn class="hidden-md-and-up" v-on="on" icon>
-        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        <v-btn text class="hidden-md-and-up" v-on="on">
+          <v-app-bar-nav-icon></v-app-bar-nav-icon>
         </v-btn>
       </template>
       <v-list>
-        <v-list-item v-for="item in menu" :key="item.icon" :to="item.link" @click="">
+        <v-list-item v-for="item in menu" :key="item.icon" :to="item.link">
           <v-list-item-icon>
             <v-icon v-text="item.icon"></v-icon>
           </v-list-item-icon>
@@ -36,7 +36,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       menu: [
         {
@@ -64,7 +64,7 @@ export default {
 li {
   list-style: none;
 }
-a{
+a {
   text-decoration: none;
   text-align: center;
 }
