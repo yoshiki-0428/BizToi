@@ -27,7 +27,7 @@ class AuthUtil(
      * Extract authentication details from token
      */
     fun extractAuthentication(token: String): CognitoAuthenticationToken? {
-        // TODO Role設定
+        // TODO Role設定, Refactoring
         val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
         return try {
             CognitoAuthenticationToken(token, getClaims(token), ls)
@@ -38,6 +38,7 @@ class AuthUtil(
             // TODO IdTokenをヘッダーに格納して返却、CognitoAuthenticationToken を返却して一時的にアクセス可能とする
             // 一時的に仮ユーザとしてアクセスは可能
             CognitoAuthenticationToken("refreshToken", TokenClaims(), ls)
+        // TODO Role設定, Refactoring
         } catch (e: Exception) {
             LoggerFactory.getLogger(this.javaClass.simpleName).error("JWTException: ${e.message ?: "No message"}")
             null

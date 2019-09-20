@@ -37,6 +37,7 @@ class AuthConfig(
             .authorizeExchange()
             // アクセス可能URL
             .pathMatchers("/api/auth/**").permitAll()
+            .pathMatchers(HttpMethod.OPTIONS).permitAll()
             .anyExchange().authenticated()
             .and().addFilterAt(corsWebFilter(), SecurityWebFiltersOrder.CORS)
             .build()

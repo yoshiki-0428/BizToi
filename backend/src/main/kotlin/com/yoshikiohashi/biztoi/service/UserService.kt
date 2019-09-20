@@ -27,6 +27,8 @@ class UserService(
         userRepository.update(mapping(claims, cognitoJWT))
     }
 
+    fun getRefreshToken(token: String): String = userRepository.findOneIdToken(token)!!.refreshToken
+
     private fun mapping(claims: TokenClaims, cognitoJWT: CognitoJWT) =
             User(
                     claims.uuid,
