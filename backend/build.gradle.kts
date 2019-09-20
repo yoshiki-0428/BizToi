@@ -1,6 +1,6 @@
-import com.rohanprabhu.gradle.plugins.kdjooq.*
+import com.rohanprabhu.gradle.plugins.kdjooq.JooqEdition
+import com.rohanprabhu.gradle.plugins.kdjooq.jooqCodegenConfiguration
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jooq.util.GenerationTool
 import org.jooq.util.jaxb.*
 import org.jooq.util.jaxb.Target
 

@@ -13,7 +13,8 @@ import reactor.core.publisher.Mono
 class SecurityContextRepository(private val authUtil: AuthUtil): ServerSecurityContextRepository {
 
     override fun load(exchange: ServerWebExchange): Mono<SecurityContext> {
-        val authentication: CognitoAuthenticationToken? = authUtil.authentication(exchange.request.headers.getFirst("Authorization"))
+        val authentication: CognitoAuthenticationToken = authUtil.authentication(exchange.request.headers.getFirst("Authorization"))
+                ?: return Mono.empty()
         return Mono.just(SecurityContextImpl(authentication))
     }
 

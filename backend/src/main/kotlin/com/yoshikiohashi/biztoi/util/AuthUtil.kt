@@ -4,10 +4,10 @@ import com.nimbusds.jose.proc.SecurityContext
 import com.nimbusds.jwt.proc.BadJWTException
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor
 import com.yoshikiohashi.biztoi.model.CognitoAuthenticationToken
-import com.yoshikiohashi.biztoi.model.CognitoJWT
 import com.yoshikiohashi.biztoi.model.TokenClaims
 import com.yoshikiohashi.biztoi.service.AuthService
 import com.yoshikiohashi.biztoi.service.UserService
+import org.slf4j.LoggerFactory
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Component
@@ -19,12 +19,32 @@ class AuthUtil(
         private val userService: UserService
 ) {
     fun authentication(header: String?): CognitoAuthenticationToken? {
-        return extractToken(header)?.let {
-            extractAuthentication(it)
-        } ?:run {
+        val token = extractToken(header) ?: return CognitoAuthenticationToken("default", TokenClaims(), emptyList())
+        return extractAuthentication(token)
+    }
+
+    /**
+     * Extract authentication details from token
+     */
+    fun extractAuthentication(token: String): CognitoAuthenticationToken? {
+        // TODO Role設定
+        val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
+        return try {
+            CognitoAuthenticationToken(token, getClaims(token), ls)
+        } catch (je: BadJWTException) {
+            LoggerFactory.getLogger(this.javaClass.simpleName).error("BadJWTException: ${je.message ?: "No message"}")
+            // TODO トークンが切れていた場合, IdToken をキーにユーザ情報を取得
+            // TODO ユーザ情報のRefreshTokenを使用し、IdTokenを更新
+            // TODO IdTokenをヘッダーに格納して返却、CognitoAuthenticationToken を返却して一時的にアクセス可能とする
+            // 一時的に仮ユーザとしてアクセスは可能
+            CognitoAuthenticationToken("refreshToken", TokenClaims(), ls)
+        } catch (e: Exception) {
+            LoggerFactory.getLogger(this.javaClass.simpleName).error("JWTException: ${e.message ?: "No message"}")
             null
         }
     }
+
+    fun getClaims(token: String) = TokenClaims(processor.process(token, null))
 
     /**
      * Extract token from header
@@ -38,28 +58,4 @@ class AuthUtil(
             headers[1]
         }
     }
-
-    /**
-     * Extract authentication details from token
-     */
-    fun extractAuthentication(token: String): CognitoAuthenticationToken? {
-        // TODO Role設定
-        return try {
-            val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
-            CognitoAuthenticationToken(token, getClaims(token), ls)
-        } catch (je: BadJWTException) {
-            val ls: List<GrantedAuthority> = listOf("ROLE_USER", "ROLE_ADMIN").map { role -> SimpleGrantedAuthority(role) }
-            return authService.refreshToken(token)?.let {
-                val tokenClaims = getClaims(it.id_token)
-                userService.updateToken(tokenClaims, it)
-                CognitoAuthenticationToken(it.id_token, tokenClaims, ls)
-            } ?:run {
-                null
-            }
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    fun getClaims(token: String) = TokenClaims(processor.process(token, null))
 }
