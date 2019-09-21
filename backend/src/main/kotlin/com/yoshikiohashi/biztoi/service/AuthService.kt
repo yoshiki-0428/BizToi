@@ -9,7 +9,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
-import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.HttpClientErrorException.BadRequest
 import org.springframework.web.client.RestTemplate
 
 /**
@@ -40,7 +40,10 @@ class AuthService {
     /**
      * Get token with authorization code
      */
-    fun getToken(code: String): CognitoJWT? {
+    fun getToken(code: String?): CognitoJWT? {
+        if (code == null) {
+            return null
+        }
         val client = RestTemplate()
         val req = HttpEntity<Nothing?>(null, getHeaders())
         val url = "$tokenUrl?grant_type=authorization_code&client_id=$clientId&code=$code&redirect_uri=$callbackUrl"
@@ -48,7 +51,7 @@ class AuthService {
 
         return try {
             client.postForObject(url, req, CognitoJWT::class.java)
-        } catch (e: HttpClientErrorException.BadRequest) {
+        } catch (e: BadRequest) {
             LoggerFactory.getLogger(this.javaClass.simpleName).error("Bad request: ${e.message ?: "No message"}")
             null
         }
@@ -58,7 +61,12 @@ class AuthService {
         val client = RestTemplate()
         val req = HttpEntity<Nothing?>(null, getHeaders())
         val url = "$tokenUrl?grant_type=refresh_token&client_id=$clientId&refresh_token=$token"
-        return client.postForObject(url, req, CognitoJWT::class.java)
+        return try {
+            client.postForObject(url, req, CognitoJWT::class.java)
+        } catch (e: BadRequest) {
+            LoggerFactory.getLogger(this.javaClass.simpleName).error("Bad request: ${e.message ?: "No message"}")
+            null
+        }
     }
 
     private fun getHeaders(): LinkedMultiValueMap<String, String> {

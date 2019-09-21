@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority
  * @property token raw token
  */
 class CognitoAuthenticationToken(
-        private val token: String,
+        val token: String,
         details: TokenClaims,
         authorities: List<GrantedAuthority> = listOf()
 ) : AbstractAuthenticationToken(authorities) {
