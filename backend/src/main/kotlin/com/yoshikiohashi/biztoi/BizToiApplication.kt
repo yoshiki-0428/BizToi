@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class BizToiApplication
 
 fun main(args: Array<String>) {
-	runApplication<BizToiApplication>(*args)
+	val run = runApplication<BizToiApplication>(*args)
 }

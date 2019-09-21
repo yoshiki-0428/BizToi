@@ -1,8 +1,15 @@
 <template>
   <v-app-bar app>
     <v-toolbar-title>
-      <router-link tag="li" id="home-nav1" to="/" exact>
-        <a>ビジトイ</a>
+      <router-link to="/">
+        <v-img
+          :src="require('../assets/logo.png')"
+          class="my-5"
+          contain
+          height="50"
+          position="left"
+        >
+        </v-img>
       </router-link>
     </v-toolbar-title>
     <v-spacer></v-spacer>

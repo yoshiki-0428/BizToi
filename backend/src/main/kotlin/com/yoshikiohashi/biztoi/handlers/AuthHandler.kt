@@ -1,11 +1,14 @@
-package com.yoshikiohashi.biztoi.controllers
+package com.yoshikiohashi.biztoi.handlers
 
 import com.yoshikiohashi.biztoi.service.AuthService
+import com.yoshikiohashi.biztoi.service.UserService
+import com.yoshikiohashi.biztoi.util.AuthUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.ServerResponse.badRequest
+import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Mono
 import java.net.URI
 
@@ -14,7 +17,11 @@ import java.net.URI
  * Auth endpoints
  */
 @Component
-class AuthController(val authService: AuthService) {
+class AuthHandler(
+        private val authUtil: AuthUtil,
+        private val authService: AuthService,
+        private val userService: UserService
+) {
     @Value("\${endpoints.authorize}")
     private val authorizeUrl: String = ""
 
@@ -33,8 +40,12 @@ class AuthController(val authService: AuthService) {
     /**
      * Get aws tokens with authorization code
      */
-    fun token(req: ServerRequest): Mono<ServerResponse> {
-        return ServerResponse
-                .ok().body(BodyInserters.fromObject(authService.getToken(req.queryParam("code").get())!!))
-    }
+    fun token(req: ServerRequest): Mono<ServerResponse> =
+            authService.getToken(req.queryParam("code").get())?.let {
+                ok().syncBody(
+                        userService.createUser(authUtil.getClaims(it.id_token), it)
+                )
+            } ?:run {
+                badRequest().build()
+            }
 }
