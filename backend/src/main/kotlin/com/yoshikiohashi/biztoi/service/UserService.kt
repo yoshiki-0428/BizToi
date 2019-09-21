@@ -15,12 +15,10 @@ class UserService(
         val user = userRepository.findOne(claims.uuid)
 
         // user作成
-        return if (user == null) {
+        if (user == null) {
             userRepository.create(mapping(claims, cognitoJWT))
-            return cognitoJWT.id_token
-        } else {
-            user.idToken
         }
+        return cognitoJWT.id_token
     }
 
     fun updateToken(claims: TokenClaims, cognitoJWT: CognitoJWT) {
