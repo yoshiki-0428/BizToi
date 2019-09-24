@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <h1>LESSON</h1>
-    <router-link to="/">Go to Home</router-link>
     <books-search />
   </v-container>
 </template>

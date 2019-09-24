@@ -21,6 +21,7 @@
           <v-btn class="mr-4" @click="getResult(word)">検索</v-btn>
         </v-col>
       </v-row>
+      <!---
       <div class="books_list">
         <v-card class="book_card" v-for="item in items" :key="item.id">
           <v-flex>
@@ -41,6 +42,19 @@
           </v-flex>
         </v-card>
       </div>
+      --->
+      <v-card max-width="344" class="mx-auto">
+        <v-card-title class="subtitle-1">Toi Title</v-card-title>
+        <v-card-text class="subtitle-2">Toi About</v-card-text>
+        <v-card-actions>
+          <v-btn text>
+            Let's try
+            <v-icon>
+              mdi-lead-pencil
+            </v-icon>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-flex>
   </v-container>
 </template>
@@ -71,39 +85,39 @@ export default {
     getResult: function() {
       const params = {
         q: `${this.word}`, // 検索キーワード。intitle:で書籍名が対象に
-        Country: "JP",           // 国の指定。JPで日本の指定
-        maxResults: 40,          // 取得する検索件数。10~40件を指定可。デフォルトは10件
-        orderBy: "relevance"     // 取得する順番、relevance: 関連順 newest: 最新順
+        Country: "JP", // 国の指定。JPで日本の指定
+        maxResults: 40, // 取得する検索件数。10~40件を指定可。デフォルトは10件
+        orderBy: "relevance" // 取得する順番、relevance: 関連順 newest: 最新順
       };
       axios
         .get(this.url, { params: params })
         .then(response => {
-                  this.items = response.data.items;
-                  this.suggestWords = this.items.map(item => {
-                    return item.volumeInfo.title;
-                  });
-                  this.isLoading = false;
-                })
-                .catch(err => {
-                  this.isLoading = false;
-                  console.log(err);
-                });
-      }
+          this.items = response.data.items;
+          this.suggestWords = this.items.map(item => {
+            return item.volumeInfo.title;
+          });
+          this.isLoading = false;
+        })
+        .catch(err => {
+          this.isLoading = false;
+          console.log(err);
+        });
     }
-  };
+  }
+};
 </script>
 
 <style>
-  .books_list {
-    width: 100%;
-    text-align: center;
-  }
-  .book_card {
-    box-sizing: border-box;
-    -webkit-box-pack: center;
-    width: 30%;
-    height: 350px;
-    margin: 10px 20px 20px 10px;
-    float: left;
-  }
+.books_list {
+  width: 100%;
+  text-align: center;
+}
+.book_card {
+  box-sizing: border-box;
+  -webkit-box-pack: center;
+  width: 30%;
+  height: 350px;
+  margin: 10px 20px 20px 10px;
+  float: left;
+}
 </style>

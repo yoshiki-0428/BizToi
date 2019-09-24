@@ -1,5 +1,7 @@
 <template>
   <v-app>
+    <v-content>
+      <v-container>
     <v-layout>
       <v-flex xs12>
         <main-header />
@@ -11,6 +13,8 @@
           <main-footer />
       </v-flex>
     </v-layout>
+      </v-container>
+    </v-content>
   </v-app>
 </template>
 
@@ -21,7 +25,7 @@ import MainFooter from "./components/MainFooter";
 export default {
   name: "App",
   components: {
-      MainFooter,
+    MainFooter,
     MainHeader
   }
 };
@@ -49,4 +53,13 @@ export default {
     .v-leave-active {
         transition: all .5s 0s ease;
     }
+  .v-application--wrap{
+    min-height: 0px;
+  }
+  .layout{
+    padding-top:-10px;
+  }
+  main.v-content{
+    margin-top: -35px;
+  }
 </style>

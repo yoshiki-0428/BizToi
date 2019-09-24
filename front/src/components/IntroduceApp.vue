@@ -35,7 +35,12 @@
         </v-card>
         <br />
         <v-card class="mx-auto" max-width="auto">
-          <v-img height="800" max-width="100%" contain src="../assets/howto.png">
+          <v-img
+            height="700"
+            max-width="100%"
+            contain
+            src="../assets/howto.png"
+          >
           </v-img>
           <login-button />
         </v-card>
