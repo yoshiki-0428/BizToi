@@ -107,3 +107,15 @@ create table talk
 		foreign key (TOI_ID) references toi (ID)
 )
 charset=utf8;
+
+create table likes
+(
+    ID int auto_increment comment 'いいね' primary key,
+    TOI_ID int null comment '問題集と紐づくID',
+    QUESTION_ID int null comment '質問と紐づくID',
+    ANSWER_HEAD_ID int null comment '回答まとめと紐づくID',
+    ANSWER_ID int null comment '回答まとめと紐づくID',
+    TALK_ID int null comment 'トークと紐づくID',
+    INSERTED timestamp default current_timestamp
+)
+charset=utf8;
