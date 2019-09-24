@@ -51,7 +51,7 @@ class AuthService {
 
         return try {
             client.postForObject(url, req, CognitoJWT::class.java)
-        } catch (e: BadRequest) {
+        } catch (e: Exception) {
             LoggerFactory.getLogger(this.javaClass.simpleName).error("Bad request: ${e.message ?: "No message"}")
             null
         }
