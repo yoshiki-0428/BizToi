@@ -7,8 +7,8 @@ import vuetify from "./plugins/vuetify";
 import {RepositoryFactory} from './plugins/RepositoryFactory.js';
 
 // API
-Vue.prototype.$usersApi = RepositoryFactory.get('users');
-Vue.prototype.$authApi = RepositoryFactory.get('auth');
+Vue.prototype.$usersApi = RepositoryFactory.get("users");
+Vue.prototype.$authApi = RepositoryFactory.get("auth");
 
 Vue.config.productionTip = false;
 

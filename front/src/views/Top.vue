@@ -1,13 +1,16 @@
 <template>
-  <v-content>
-    <v-btn @click="getUser">Get User</v-btn>
-    <H1>About Page!!</H1>
-    <h2>User INFO: {{ userInfo }}</h2>
-  </v-content>
+  <v-container>
+    <book-search></book-search>
+  </v-container>
 </template>
 
 <script>
+  import BookSearch from "../components/BooksSearch";
+
   export default {
+  components: {
+    BookSearch
+  },
   data: () => {
     return {
       userInfo: Object,
