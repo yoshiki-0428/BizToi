@@ -2,54 +2,36 @@
   <v-content>
     <v-btn @click="getUser">Get User</v-btn>
     <H1>About Page!!</H1>
-    <h2>TokenId: {{ tokenId }}</h2>
-    <br/>
-    <h2>AccessToken: {{ accessToken }}</h2>
-    <br/>
-    <h2>RefreshToken: {{ refreshToken }}</h2>
+    <h2>User INFO: {{ userInfo }}</h2>
   </v-content>
 </template>
 
 <script>
-  import axios from "axios";
-
   export default {
   data: () => {
     return {
-      tokenId: "",
-      accessToken: "",
-      refreshToken: ""
+      userInfo: Object,
     };
   },
   created() {
-    const _this = this;
-    axios
-      .get(process.env.VUE_APP_API_BASE_URL + "auth/token", {
-        params: {
-          code: this.$route.query.code
-        }
-      })
-      .then(result => {
-        console.log(result)
-        _this.tokenId = result.data;
-        localStorage.setItem("idToken", result.data);
-      });
+    const code = this.$route.query.code;
+    if (code) {
+      this.getToken(code);
+    }
   },
   methods: {
-    getUser() {
-      const bearer = `Bearer ${localStorage.getItem("idToken")}`;
-      axios
-        .get(process.env.VUE_APP_API_BASE_URL + "users/me", {
-          headers: {
-            Authorization: bearer
-          }
-        })
-        .then(result => {
-          console.log(result);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    getToken(code) {
+      this.$authApi.getTokenCode(code)
+          .then(result => {
+            localStorage.setItem("idToken", result.data);
+            location.href = `${process.env.VUE_APP_FRONT_DOMAIN}/top`;
+          });
+    },
+    async getUser() {
+      this.userInfo = await this.$usersApi.get()
+          .then(result => {
+            return result.data
+          });
     }
   }
 };
