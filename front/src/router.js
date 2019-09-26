@@ -13,9 +13,9 @@ export default new Router({
       component: () => import("./views/Home.vue")
     },
     {
-      path: "/about",
-      name: "about",
-      component: () => import("./views/About.vue")
+      path: "/top",
+      name: "top",
+      component: () => import("./views/Top.vue")
     },
     {
       path: "/account",

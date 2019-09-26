@@ -5,6 +5,7 @@ import com.yoshikiohashi.biztoi.model.TokenClaims
 import com.yoshikiohashi.biztoi.repositories.UserRepository
 import com.yoshikiohashi.biztoi.tables.pojos.User
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
 
 @Service
 class UserService(
@@ -32,6 +33,8 @@ class UserService(
                     claims.uuid,
                     cognitoJWT.id_token,
                     cognitoJWT.access_token,
-                    cognitoJWT.refresh_token
+                    cognitoJWT.refresh_token,
+                    Timestamp(0),
+                    Timestamp(0)
             )
 }

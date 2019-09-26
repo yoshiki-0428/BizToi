@@ -31,11 +31,15 @@ class AuthHandler(
     /**
      * Redirect user to correct url for authorization code
      */
-    fun login(req: ServerRequest) =
-            ServerResponse.permanentRedirect(URI(authorizeUrl)).build()
+    fun login(req: ServerRequest): Mono<ServerResponse> {
+        val redirect: String = req.queryParam("redirect_uri").get()
+        return ServerResponse.permanentRedirect(URI(authorizeUrl + redirect)).build()
+    }
 
-    fun logout(req: ServerRequest) =
-            ServerResponse.permanentRedirect(URI(logoutUrl)).build()
+    fun logout(req: ServerRequest): Mono<ServerResponse> {
+        val redirect: String = req.queryParam("redirect_uri").get()
+        return ServerResponse.permanentRedirect(URI(logoutUrl + redirect)).build()
+    }
 
     /**
      * Get aws tokens with authorization code
