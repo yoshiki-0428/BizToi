@@ -27,7 +27,7 @@
       this.$authApi.getTokenCode(code)
           .then(result => {
             localStorage.setItem("idToken", result.data);
-            location.href = `${process.env.VUE_APP_FRONT_DOMAIN}/top`;
+            location.href = "/top";
           });
     },
     async getUser() {
