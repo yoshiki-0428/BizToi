@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 3000",
     "dev-serve": "vue-cli-service serve --port 3000 --mode development",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },

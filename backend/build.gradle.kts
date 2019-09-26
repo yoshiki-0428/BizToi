@@ -92,6 +92,7 @@ repositories {
 	maven("https://repo.spring.io/milestone")
 	maven("https://oss.sonatype.org/content/repositories/snapshots")
 	maven("https://plugins.gradle.org/m2/")
+	maven("http://oss.jfrog.org/artifactory/oss-snapshot-local/")
 }
 
 extra["springCloudVersion"] = "Hoxton.M1"
@@ -114,8 +115,9 @@ dependencies {
 	jooqGeneratorRuntime("mysql:mysql-connector-java")
 
 	// Other
-	implementation("io.springfox:springfox-swagger2:2.9.2")
-	implementation("io.springfox:springfox-swagger-ui:2.9.2")
+	compile("io.springfox:springfox-swagger2:3.0.0-SNAPSHOT")
+	compile("io.springfox:springfox-spring-webflux:3.0.0-SNAPSHOT")
+	compile("io.springfox:springfox-swagger-ui:3.0.0-SNAPSHOT")
 	implementation("com.amazonaws:aws-java-sdk-cognitoidp")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")

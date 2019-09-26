@@ -19,7 +19,7 @@ class AuthUtil(
         private val userService: UserService
 ) {
     fun authentication(header: String?): CognitoAuthenticationToken? {
-        val token = extractToken(header) ?: return CognitoAuthenticationToken("default", TokenClaims(), emptyList())
+        val token = extractToken(header) ?: return null
         return extractAuthentication(token)
     }
 
