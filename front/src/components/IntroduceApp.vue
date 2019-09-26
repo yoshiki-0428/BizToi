@@ -42,7 +42,24 @@
             src="../assets/howto.png"
           >
           </v-img>
-          <login-button />
+          <v-card color="black" class="mx-auto white--text" max-width="100%">
+            <v-card-title
+                    class="font-weight-bold justify-center display-2 mt-10"
+            >
+              BizToi
+            </v-card-title>
+            <v-card-text class="subtitle-2 mt-10 white--text">
+              <h2 class="font-weight-bold">
+                あなたの読書をより有意義に ビジトイ！
+              </h2><br />
+              <p>読書した本の内容をどれだけ覚えていますか？</p>
+              <p>あなた知識の吸収を手助けします</p>
+              <p>読書しただけで満足していませんか</p>
+              <p>実際の生活にどれだけ活用できているでしょうか</p>
+              <h3>ビジトイは「忘れない・実践で活かせる読書」を提供します</h3>
+            </v-card-text>
+            <login-button />
+          </v-card>
         </v-card>
       </v-flex>
       <br />
