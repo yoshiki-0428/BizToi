@@ -17,6 +17,7 @@
       <v-btn v-model="navBar" text icon @click.stop="navBar = !navBar">
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
       </v-btn>
+      <search-btn />
       <v-toolbar-title>
         <router-link to="/">
           <v-img
@@ -60,7 +61,9 @@
 </template>
 
 <script>
+import SearchBtn from "./SearchBtn";
 export default {
+  components: {SearchBtn},
   data: function () {
     return {
       menu: [
