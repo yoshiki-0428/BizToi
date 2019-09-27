@@ -13,20 +13,19 @@
           row-height="15"
           no-filter
           hide-no-data
-          filled
           item-text="title"
           item-value="title"
         >
-          <template v-slot:item="data" style="height: 1000px">
+          <template v-slot:item="data">
             <template >
               <!-- TODO 本画像を小さく、タイトルをわかりやすく表示する -->
               <!-- TODO クリックしたら本詳細画面に飛ばす -->
               <v-list-item-icon>
                 <v-img :src="data.item.pictureUrl"/>
               </v-list-item-icon>
-              <v-list-item-content>
+              <v-list-item-content >
                 <v-list-item-title v-html="data.item.title"></v-list-item-title>
-                <v-list-item-subtitle v-html="data.item.detail"></v-list-item-subtitle>
+                <v-list-item-subtitle class="text-justify">{{data.item.detail}}</v-list-item-subtitle>
               </v-list-item-content>
             </template>
           </template>
@@ -51,7 +50,7 @@
   },
   watch: {
     word() {
-      if (this.word && this.word.length !== 0) {
+      if (this.word) {
         this.debouncedGetResult();
         this.isLoading = true;
       }
@@ -61,18 +60,20 @@
     this.debouncedGetResult = _.debounce(this.getResult, 400);
   },
   methods: {
-    async getResult () {
-      await this.$googleBookApi.getBooks(this.word)
-          .then(res => {
-            this.items = res.data.items.map(item => {
-              return new Book(item.volumeInfo)
+    getResult () {
+      if (this.word.length !== 0) {
+        this.$googleBookApi.getBooks(this.word)
+            .then(res => {
+              this.items = res.data.items.map(item => {
+                return new Book(item.volumeInfo)
+              });
+              this.isLoading = false;
+            })
+            .catch(err => {
+              this.isLoading = false;
+              console.log(err.response);
             });
-            this.isLoading = false;
-          })
-          .catch(err => {
-            this.isLoading = false;
-            console.log(err.response);
-          });
+      }
     }
   }
 };
