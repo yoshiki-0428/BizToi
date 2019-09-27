@@ -38,7 +38,6 @@
 </template>
 
 <script>
-  import axios from "axios";
   import Book from "../model/Book"
   import _ from "lodash";
 
@@ -46,14 +45,13 @@
   data() {
     return {
       word: "",
-      url: "https://www.googleapis.com/books/v1/volumes",
       items: [],
       isLoading: false
     };
   },
   watch: {
     word() {
-      if (this.word) {
+      if (this.word && this.word.length !== 0) {
         this.debouncedGetResult();
         this.isLoading = true;
       }
@@ -64,24 +62,17 @@
   },
   methods: {
     async getResult () {
-      const params = {
-        q: `${this.word}`, // 検索キーワード。intitle:で書籍名が対象に
-        Country: "JP",           // 国の指定。JPで日本の指定
-        maxResults: 40,          // 取得する検索件数。10~40件を指定可。デフォルトは10件
-        orderBy: "relevance"     // 取得する順番、relevance: 関連順 newest: 最新順
-      };
-      await axios
-        .get(this.url, { params: params })
-        .then(response => {
-          this.items = response.data.items.map(item => {
-            return new Book(item.volumeInfo)
+      await this.$googleBookApi.getBooks(this.word)
+          .then(res => {
+            this.items = res.data.items.map(item => {
+              return new Book(item.volumeInfo)
+            });
+            this.isLoading = false;
+          })
+          .catch(err => {
+            this.isLoading = false;
+            console.log(err.response);
           });
-          this.isLoading = false;
-        })
-        .catch(err => {
-          this.isLoading = false;
-          console.log(err);
-        });
     }
   }
 };
