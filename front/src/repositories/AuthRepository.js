@@ -1,11 +1,12 @@
-import Repository from "../plugins/Repository";
+import {apiAxios} from "../plugins/Repository";
 
 const resource = "/auth";
 export default {
   getTokenCode(code) {
-    return Repository.get(`${resource}/token`, {
+    return apiAxios.get(`${resource}/token`, {
       params: {
-        code: code
+        code: code,
+        redirect_uri: `${window.location.origin}/top`
       }
     });
   }

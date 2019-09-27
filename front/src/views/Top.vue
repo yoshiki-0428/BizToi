@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <book-search></book-search>
+    <book-search />
+    <div @click="getUser">Get User</div>
+    <div>{{ userInfo }}</div>
   </v-container>
 </template>
 

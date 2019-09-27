@@ -7,6 +7,7 @@ import vuetify from "./plugins/vuetify";
 import {RepositoryFactory} from './plugins/RepositoryFactory.js';
 
 // API
+Vue.prototype.$googleBookApi = RepositoryFactory.get("googleBookApi");
 Vue.prototype.$usersApi = RepositoryFactory.get("users");
 Vue.prototype.$authApi = RepositoryFactory.get("auth");
 

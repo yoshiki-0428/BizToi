@@ -3,14 +3,14 @@ import axios from 'axios';
 const baseUrl = process.env.VUE_APP_API_BASE_URL;
 const bearer = `Bearer ${localStorage.getItem("idToken")}`;
 
-const http = axios.create({
+export const apiAxios = axios.create({
   baseURL: baseUrl,
   headers: {
     "Authorization": bearer
   }
 });
 
-http.interceptors.response.use(
+apiAxios.interceptors.response.use(
     response => response,
     error => {
       if (error.response) {
@@ -22,4 +22,6 @@ http.interceptors.response.use(
       }
 });
 
-export default http
+export const googleApi = axios.create({
+  baseURL: `https://www.googleapis.com/books/v1/`
+});

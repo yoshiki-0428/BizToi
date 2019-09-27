@@ -13,20 +13,19 @@
           row-height="15"
           no-filter
           hide-no-data
-          filled
           item-text="title"
           item-value="title"
         >
-          <template v-slot:item="data" style="height: 1000px">
+          <template v-slot:item="data">
             <template >
               <!-- TODO 本画像を小さく、タイトルをわかりやすく表示する -->
               <!-- TODO クリックしたら本詳細画面に飛ばす -->
               <v-list-item-icon>
                 <v-img :src="data.item.pictureUrl"/>
               </v-list-item-icon>
-              <v-list-item-content>
+              <v-list-item-content >
                 <v-list-item-title v-html="data.item.title"></v-list-item-title>
-                <v-list-item-subtitle v-html="data.item.detail"></v-list-item-subtitle>
+                <v-list-item-subtitle class="text-justify">{{data.item.detail}}</v-list-item-subtitle>
               </v-list-item-content>
             </template>
           </template>
@@ -38,15 +37,13 @@
 </template>
 
 <script>
-import axios from "axios";
-import Book from "../model/Book"
-import _ from "lodash";
+  import Book from "../model/Book"
+  import _ from "lodash";
 
-export default {
+  export default {
   data() {
     return {
       word: "",
-      url: "https://www.googleapis.com/books/v1/volumes",
       items: [],
       isLoading: false
     };
@@ -63,25 +60,20 @@ export default {
     this.debouncedGetResult = _.debounce(this.getResult, 400);
   },
   methods: {
-    async getResult () {
-      const params = {
-        q: `${this.word}`, // 検索キーワード。intitle:で書籍名が対象に
-        Country: "JP", // 国の指定。JPで日本の指定
-        maxResults: 40, // 取得する検索件数。10~40件を指定可。デフォルトは10件
-        orderBy: "relevance" // 取得する順番、relevance: 関連順 newest: 最新順
-      };
-      await axios
-        .get(this.url, { params: params })
-        .then(response => {
-          this.items = response.data.items.map(item => {
-            return new Book(item.volumeInfo)
-          });
-          this.isLoading = false;
-        })
-        .catch(err => {
-          this.isLoading = false;
-          console.log(err);
-        });
+    getResult () {
+      if (this.word.length !== 0) {
+        this.$googleBookApi.getBooks(this.word)
+            .then(res => {
+              this.items = res.data.items.map(item => {
+                return new Book(item.volumeInfo)
+              });
+              this.isLoading = false;
+            })
+            .catch(err => {
+              this.isLoading = false;
+              console.log(err.response);
+            });
+      }
     }
   }
 };
