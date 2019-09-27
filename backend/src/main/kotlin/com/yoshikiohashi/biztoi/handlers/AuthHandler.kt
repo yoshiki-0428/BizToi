@@ -44,12 +44,16 @@ class AuthHandler(
     /**
      * Get aws tokens with authorization code
      */
-    fun token(req: ServerRequest): Mono<ServerResponse> =
-            authService.getToken(req.queryParam("code").get())?.let {
-                ok().syncBody(
-                        userService.createUser(authUtil.getClaims(it.id_token), it)
-                )
-            } ?:run {
-                badRequest().build()
-            }
+    fun token(req: ServerRequest): Mono<ServerResponse> {
+        val cognitoJWT = authService.getToken(
+                req.queryParam("code").orElse(null),
+                req.queryParam("redirect_uri").orElse(null))
+        return if (cognitoJWT != null) {
+            ok().syncBody(
+                    userService.createUser(authUtil.getClaims(cognitoJWT.id_token), cognitoJWT)
+            )
+        } else {
+            badRequest().build()
+        }
+    }
 }

@@ -5,7 +5,8 @@ export default {
   getTokenCode(code) {
     return Repository.get(`${resource}/token`, {
       params: {
-        code: code
+        code: code,
+        redirect_uri: `${window.location.origin}/top`
       }
     });
   }
