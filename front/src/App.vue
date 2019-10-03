@@ -60,6 +60,6 @@ export default {
     padding-top:-10px;
   }
   main.v-content{
-    margin-top: -35px;
+    margin-top: -30px;
   }
 </style>
