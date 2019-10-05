@@ -7,6 +7,7 @@ class Book {
     this.title = volumeInfo.title;
     this.detail = volumeInfo.description;
     this.linkUrl = volumeInfo.infoLink;
+    this.authors = volumeInfo.authors;
   }
 }
 

@@ -3,7 +3,7 @@
     <v-layout text-center wrap>
       <v-flex xs12>
         <v-btn color="red" :href="url" target="_self" dark
-          >新規登録 / ログインはこちらから
+          >新規登録 / ログインはこちら
         </v-btn>
       </v-flex>
     </v-layout>
