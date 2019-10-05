@@ -40,13 +40,13 @@ class AuthService {
     /**
      * Get token with authorization code
      */
-    fun getToken(code: String?): CognitoJWT? {
-        if (code == null) {
-            return null
-        }
+    fun getToken(code: String?, redirect: String?): CognitoJWT? {
+        code ?: return null
+        redirect ?: return null
+
         val client = RestTemplate()
         val req = HttpEntity<Nothing?>(null, getHeaders())
-        val url = "$tokenUrl?grant_type=authorization_code&client_id=$clientId&code=$code&redirect_uri=$callbackUrl"
+        val url = "$tokenUrl?grant_type=authorization_code&client_id=$clientId&code=$code&redirect_uri=$redirect"
         print(url)
 
         return try {
